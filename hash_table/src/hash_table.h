@@ -13,12 +13,12 @@ struct hash_table {
   struct hash_table_pair **pairs;
 };
 
-struct hash_table *create_hash_table(void);
-void delete_hash_table(struct hash_table *ht);
+struct hash_table *hash_table_new(void);
+void hash_table_delete(struct hash_table *ht);
 
-char *get_hash_table_pair_value(struct hash_table *ht, const char *key);
-void insert_hash_table_pair(struct hash_table *ht, const char *key,
+char *hash_table_pair_get_value(struct hash_table *ht, const char *key);
+void hash_table_pair_insert(struct hash_table *ht, const char *key,
                             const char *value);
-void delete_hash_table_pair(struct hash_table *ht, const char *key);
+void hash_table_pair_delete(struct hash_table *ht, const char *key);
 
 #endif /* _HASH_TABLE */
