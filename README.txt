@@ -1,5 +1,5 @@
 • Hash Table
 • Hello World
-• Linked List
+• Singly Linked List
 
 code is licensed under MIT.
