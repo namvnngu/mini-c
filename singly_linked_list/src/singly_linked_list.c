@@ -10,26 +10,35 @@ static void _exit_out_of_memory(void) {
 }
 
 struct node *node_new(int data) {
-  struct node *n = malloc(sizeof(struct node));
+  struct node *node = malloc(sizeof(struct node));
 
-  if (n == NULL) {
+  if (node == NULL) {
     _exit_out_of_memory();
   }
 
-  n->data = data;
-  n->next = NULL;
+  node->data = data;
+  node->next = NULL;
 
-  return n;
+  return node;
 }
 
 struct singly_linked_list *singly_linked_list_new(void) {
-  struct singly_linked_list *l = malloc(sizeof(struct singly_linked_list));
+  struct singly_linked_list *list = malloc(sizeof(struct singly_linked_list));
 
-  if (l == NULL) {
+  if (list == NULL) {
     _exit_out_of_memory();
   }
 
-  l->head = NULL;
+  list->head = NULL;
+  list->tail = NULL;
 
-  return l;
+  return list;
+}
+
+struct node *singly_linked_list_get_head(struct singly_linked_list *list) {
+  return list->head;
+}
+
+struct node *singly_linked_list_get_tail(struct singly_linked_list *list) {
+  return list->tail;
 }
