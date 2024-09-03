@@ -5,7 +5,7 @@
 
 struct node {
   int data;
-  struct Node *next;
+  struct node *next;
 };
 
 struct singly_linked_list {
