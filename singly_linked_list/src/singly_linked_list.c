@@ -79,7 +79,8 @@ void singly_linked_list_remove_tail(struct singly_linked_list *list) {
 
   struct node *penultimate = NULL;
 
-  for (struct node *current = list->head; current; current = current->next)
+  for (struct node *current = list->head; current->next != NULL;
+       current = current->next)
     penultimate = current;
 
   struct node *tail = list->tail;
@@ -119,7 +120,7 @@ void singly_linked_list_clear(struct singly_linked_list *list) {
   do {
     struct node *cleared_node = current;
     current = current->next;
-    free(current);
+    free(cleared_node);
   } while (current != NULL);
 
   list->head = NULL;
