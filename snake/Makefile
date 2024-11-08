@@ -10,22 +10,22 @@ CFLAGS += -Wno-gnu-compound-literal-initializer -Wno-gnu-zero-variadic-macro-arg
 LDFLAGS = -lncurses
 
 EXE = app
-BIN_DIR = bin
+BUILD_DIR = build
 SRC_DIR = src
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
-OBJ_FILES = $(SRC_FILES:%.c=$(BIN_DIR)/%.o)
+OBJ_FILES = $(SRC_FILES:%.c=$(BUILD_DIR)/%.o)
 
 .PHONY: all clean
 
 all: dirs app run
 dirs:
-	mkdir -p ./$(BIN_DIR)
-	rsync -a --include='*/' --exclude='*' "$(SRC_DIR)" "$(BIN_DIR)"
+	mkdir -p ./$(BUILD_DIR)
+	rsync -a --include='*/' --exclude='*' "$(SRC_DIR)" "$(BUILD_DIR)"
 run:
-	$(BIN_DIR)/$(EXE)
+	$(BUILD_DIR)/$(EXE)
 app: $(OBJ_FILES)
-	$(CC) -o $(BIN_DIR)/$(EXE) $^ $(LDFLAGS)
+	$(CC) -o $(BUILD_DIR)/$(EXE) $^ $(LDFLAGS)
 $(OBJ_FILES): $(SRC_FILES)
 	$(CC) -o $@ -c $< $(INCFLAGS) $(CFLAGS)
 clean:
-	rm -rf $(BIN_DIR)
+	rm -rf $(BUILD_DIR)
