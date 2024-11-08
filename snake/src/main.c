@@ -1,33 +1,47 @@
 #include <ncurses.h>
+#include <stdbool.h>
+#include <unistd.h>
+
+#define DELAY_IN_MICROSECOND 50000
 
 int main(int argc, char **argv) {
-  int max_x = 0;
-  int max_y = 0;
+  int screen_width = 0;
+  int screen_height = 0;
+  int margin = 5;
 
-  // init screen and sets up screen
   initscr();
+  getmaxyx(stdscr, screen_height, screen_width);
+  noecho();
+  cbreak();
+  curs_set(FALSE);
+  nodelay(stdscr, TRUE);
 
-  // get max width and max height of the screen
-  getmaxyx(stdscr, max_y, max_x);
-
-  // create window
-  WINDOW *win = newwin(max_y - 2, max_x - 2, 1, 1);
-  refresh();
-
-  // make box border
+  WINDOW *win = newwin(screen_height - margin * 2, screen_width - margin * 2,
+                       margin, margin);
   box(win, 0, 0);
 
-  // move and print in window
-  mvwprintw(win, 0, 1, "Snake");
-  mvwprintw(win, 1, 1, "#####S @");
+  char ch;
+  bool exit = false;
 
-  // refreshing the window
-  wrefresh(win);
+  while (!exit) {
+    getmaxyx(stdscr, screen_height, screen_width);
 
-  // pause the screen output
-  getch();
+    ch = getch();
 
-  // deallocates memory and ends ncurses
+    switch (ch) {
+      case 'q': {
+        exit = true;
+        break;
+      }
+    }
+
+    mvwprintw(win, 2, 1, "#######>");
+    mvwprintw(win, 10, 20, "@");
+
+    wrefresh(win);
+    usleep(DELAY_IN_MICROSECOND);
+  }
+
   endwin();
 
   return 0;
