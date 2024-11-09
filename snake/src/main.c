@@ -2,44 +2,64 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-#define DELAY_IN_MICROSECOND 50000
+#define DELAY_IN_MICROSECOND 75000
 
 int main(int argc, char **argv) {
-  int screen_width = 0;
-  int screen_height = 0;
-  int margin = 5;
 
   initscr();
-  getmaxyx(stdscr, screen_height, screen_width);
   noecho();
   cbreak();
   curs_set(FALSE);
+  keypad(stdscr, TRUE);
   nodelay(stdscr, TRUE);
 
-  WINDOW *win = newwin(screen_height - margin * 2, screen_width - margin * 2,
-                       margin, margin);
-  box(win, 0, 0);
+  int screen_width = 0;
+  int screen_height = 0;
+  getmaxyx(stdscr, screen_height, screen_width);
 
-  char ch;
+  int WIN_MARGIN = 5;
+  WINDOW *win = newwin(screen_height - WIN_MARGIN * 2,
+                       screen_width - WIN_MARGIN * 2, WIN_MARGIN, WIN_MARGIN);
+
+  int key_input;
+
+  int snake_x = 0;
+  int snake_y = 2;
+
   bool exit = false;
 
   while (!exit) {
     getmaxyx(stdscr, screen_height, screen_width);
+    box(win, 0, 0);
 
-    ch = getch();
-
-    switch (ch) {
+    key_input = getch();
+    switch (key_input) {
       case 'q': {
         exit = true;
         break;
       }
+      case KEY_RIGHT: {
+        break;
+      }
+      case KEY_LEFT: {
+        break;
+      }
+      case KEY_DOWN: {
+        break;
+      }
+      case KEY_UP: {
+        break;
+      }
     }
 
-    mvwprintw(win, 2, 1, "#######>");
+    snake_x++;
+    mvwprintw(win, snake_y, snake_x, "#######>");
+
     mvwprintw(win, 10, 20, "@");
 
     wrefresh(win);
     usleep(DELAY_IN_MICROSECOND);
+    wclear(win);
   }
 
   endwin();
