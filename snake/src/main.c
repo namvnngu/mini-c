@@ -17,9 +17,10 @@ int main(int argc, char **argv) {
   int screen_height = 0;
   getmaxyx(stdscr, screen_height, screen_width);
 
-  int WIN_MARGIN = 5;
-  WINDOW *win = newwin(screen_height - WIN_MARGIN * 2,
-                       screen_width - WIN_MARGIN * 2, WIN_MARGIN, WIN_MARGIN);
+  int WIN_MARGIN_INLINE = 15;
+  int WIN_MARGIN_BLOCK = 5;
+  WINDOW *win = newwin(screen_height - WIN_MARGIN_BLOCK * 2,
+                       screen_width - WIN_MARGIN_INLINE * 2, WIN_MARGIN_BLOCK, WIN_MARGIN_INLINE);
 
   int key_input;
 
