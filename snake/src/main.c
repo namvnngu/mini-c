@@ -21,11 +21,11 @@ enum snake_direction {
 int screen_width = 0;
 int screen_height = 0;
 
-WINDOW *gbox;
-int gbox_width;
-int gbox_height;
-const char GBOX_MARGIN_INLINE = 15;
-const char GBOX_MARGIN_BLOCK = 5;
+WINDOW *sbox;
+int sbox_width;
+int sbox_height;
+const char SBOX_MARGIN_INLINE = 15;
+const char SBOX_MARGIN_BLOCK = 5;
 
 int apple_x;
 int apple_y;
@@ -51,12 +51,12 @@ void setup(void) {
   nodelay(stdscr, TRUE);
 
   getmaxyx(stdscr, screen_height, screen_width);
-  gbox_width = screen_width - GBOX_MARGIN_INLINE * 2;
-  gbox_height = screen_height - GBOX_MARGIN_BLOCK * 2;
-  gbox = newwin(gbox_height, gbox_width, GBOX_MARGIN_BLOCK, GBOX_MARGIN_INLINE);
+  sbox_width = screen_width - SBOX_MARGIN_INLINE * 2;
+  sbox_height = screen_height - SBOX_MARGIN_BLOCK * 2;
+  sbox = newwin(sbox_height, sbox_width, SBOX_MARGIN_BLOCK, SBOX_MARGIN_INLINE);
 
-  apple_x = rand_int(4, gbox_width - 2);
-  apple_y = rand_int(4, gbox_height - 2);
+  apple_x = rand_int(4, sbox_width - 2);
+  apple_y = rand_int(4, sbox_height - 2);
 
   snake_x = 2;
   snake_y = 2;
@@ -71,7 +71,7 @@ void loop(void) {
 
   while (!exit) {
     getmaxyx(stdscr, screen_height, screen_width);
-    box(gbox, 0, 0);
+    box(sbox, 0, 0);
 
     key_input = getch();
     switch (key_input) {
@@ -115,13 +115,13 @@ void loop(void) {
         break;
       }
     }
-    mvwprintw(gbox, snake_y, snake_x, "****$");
+    mvwprintw(sbox, snake_y, snake_x, "****$");
 
-    mvwprintw(gbox, apple_y, apple_x, "%c", APPLE);
+    mvwprintw(sbox, apple_y, apple_x, "%c", APPLE);
 
-    wrefresh(gbox);
+    wrefresh(sbox);
     usleep(DELAY_IN_MICROSECOND);
-    wclear(gbox);
+    wclear(sbox);
   }
   endwin();
 }
