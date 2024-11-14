@@ -64,10 +64,8 @@ void setup(void) {
 
 void loop(void) {
   int key_input;
-
-  enum snake_direction snake_dir = right;
-
   bool exit = false;
+  enum snake_direction snake_dir = right;
 
   while (!exit) {
     getmaxyx(stdscr, screen_height, screen_width);
@@ -123,6 +121,7 @@ void loop(void) {
     usleep(DELAY_IN_MICROSECOND);
     wclear(sbox);
   }
+
   endwin();
 }
 
