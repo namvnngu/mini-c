@@ -4,8 +4,42 @@
 
 #define DELAY_IN_MICROSECOND 75000
 
-int main(int argc, char **argv) {
+void setup(void);
+void loop(void);
+void end(void);
 
+enum snake_direction {
+  up,
+  down,
+  right,
+  left,
+};
+
+int screen_width = 0;
+int screen_height = 0;
+
+WINDOW *gbox;
+int gbox_width;
+int gbox_height;
+const char GBOX_MARGIN_INLINE = 15;
+const char GBOX_MARGIN_BLOCK = 5;
+
+const char APPLE = '@';
+
+int snake_x = 0;
+int snake_y = 2;
+const char SNAKE_HEAD = '>';
+const char SNAKE_BODY = '*';
+
+int main(int argc, char **argv) {
+  setup();
+  loop();
+  end();
+
+  return 0;
+}
+
+void setup(void) {
   initscr();
   noecho();
   cbreak();
@@ -13,25 +47,22 @@ int main(int argc, char **argv) {
   keypad(stdscr, TRUE);
   nodelay(stdscr, TRUE);
 
-  int screen_width = 0;
-  int screen_height = 0;
   getmaxyx(stdscr, screen_height, screen_width);
+  gbox_width = screen_width - GBOX_MARGIN_INLINE * 2;
+  gbox_height = screen_height - GBOX_MARGIN_BLOCK * 2;
+  gbox = newwin(gbox_height, gbox_width, GBOX_MARGIN_BLOCK, GBOX_MARGIN_INLINE);
+}
 
-  int WIN_MARGIN_INLINE = 15;
-  int WIN_MARGIN_BLOCK = 5;
-  WINDOW *win = newwin(screen_height - WIN_MARGIN_BLOCK * 2,
-                       screen_width - WIN_MARGIN_INLINE * 2, WIN_MARGIN_BLOCK, WIN_MARGIN_INLINE);
-
+void loop(void) {
   int key_input;
 
-  int snake_x = 0;
-  int snake_y = 2;
+  enum snake_direction snake_dir = right;
 
   bool exit = false;
 
   while (!exit) {
     getmaxyx(stdscr, screen_height, screen_width);
-    box(win, 0, 0);
+    box(gbox, 0, 0);
 
     key_input = getch();
     switch (key_input) {
@@ -39,31 +70,53 @@ int main(int argc, char **argv) {
         exit = true;
         break;
       }
-      case KEY_RIGHT: {
-        break;
-      }
-      case KEY_LEFT: {
+      case KEY_UP: {
+        snake_dir = up;
         break;
       }
       case KEY_DOWN: {
+        snake_dir = down;
         break;
       }
-      case KEY_UP: {
+      case KEY_RIGHT: {
+        snake_dir = right;
+        break;
+      }
+      case KEY_LEFT: {
+        snake_dir = left;
         break;
       }
     }
 
-    snake_x++;
-    mvwprintw(win, snake_y, snake_x, "#######>");
+    switch (snake_dir) {
+      case up: {
+        snake_y--;
+        break;
+      }
+      case down: {
+        snake_y++;
+        break;
+      }
+      case right: {
+        snake_x++;
+        break;
+      }
+      case left: {
+        snake_x--;
+        break;
+      }
+    }
+    mvwprintw(gbox, snake_y, snake_x, "#######>");
 
-    mvwprintw(win, 10, 20, "@");
+    mvwprintw(gbox, 10, 20, "@");
 
-    wrefresh(win);
+    wrefresh(gbox);
     usleep(DELAY_IN_MICROSECOND);
-    wclear(win);
+    wclear(gbox);
   }
+}
 
+void end(void) {
+  //
   endwin();
-
-  return 0;
 }
