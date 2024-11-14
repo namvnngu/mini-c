@@ -1,12 +1,15 @@
 #include <ncurses.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <time.h>
 #include <unistd.h>
 
 #define DELAY_IN_MICROSECOND 75000
 
 void setup(void);
 void loop(void);
-void end(void);
+
+int rand_int(int min, int max);
 
 enum snake_direction {
   up,
@@ -24,18 +27,18 @@ int gbox_height;
 const char GBOX_MARGIN_INLINE = 15;
 const char GBOX_MARGIN_BLOCK = 5;
 
+int apple_x;
+int apple_y;
 const char APPLE = '@';
 
-int snake_x = 0;
-int snake_y = 2;
-const char SNAKE_HEAD = '>';
+int snake_x;
+int snake_y;
+const char SNAKE_HEAD = '$';
 const char SNAKE_BODY = '*';
 
 int main(int argc, char **argv) {
   setup();
   loop();
-  end();
-
   return 0;
 }
 
@@ -51,6 +54,12 @@ void setup(void) {
   gbox_width = screen_width - GBOX_MARGIN_INLINE * 2;
   gbox_height = screen_height - GBOX_MARGIN_BLOCK * 2;
   gbox = newwin(gbox_height, gbox_width, GBOX_MARGIN_BLOCK, GBOX_MARGIN_INLINE);
+
+  apple_x = rand_int(4, gbox_width - 2);
+  apple_y = rand_int(4, gbox_height - 2);
+
+  snake_x = 2;
+  snake_y = 2;
 }
 
 void loop(void) {
@@ -106,17 +115,18 @@ void loop(void) {
         break;
       }
     }
-    mvwprintw(gbox, snake_y, snake_x, "#######>");
+    mvwprintw(gbox, snake_y, snake_x, "****$");
 
-    mvwprintw(gbox, 10, 20, "@");
+    mvwprintw(gbox, apple_y, apple_x, "%c", APPLE);
 
     wrefresh(gbox);
     usleep(DELAY_IN_MICROSECOND);
     wclear(gbox);
   }
+  endwin();
 }
 
-void end(void) {
-  //
-  endwin();
+int rand_int(int min, int max) {
+  srand(time(NULL));
+  return min + random() % (max - min + 1);
 }
