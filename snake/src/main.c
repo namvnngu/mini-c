@@ -4,41 +4,49 @@
 #include <time.h>
 #include <unistd.h>
 
-#define DELAY_IN_MICROSECOND 75000
+#define DELAY_IN_MICROSECOND 100000
+
+#define SNAKE_MAX_LENGTH 256
+
+struct vec2 {
+  int x;
+  int y;
+};
+
+struct snake_t {
+  struct vec2 positions[SNAKE_MAX_LENGTH];
+  struct vec2 speed;
+  int length;
+};
 
 void setup(void);
-void loop(void);
+void update(void);
+void draw(void);
 
 int rand_int(int min, int max);
-
-enum snake_direction {
-  up,
-  down,
-  right,
-  left,
-};
 
 int screen_width = 0;
 int screen_height = 0;
 
-WINDOW *sbox;
+WINDOW *game_box;
 int sbox_width;
 int sbox_height;
 const char SBOX_MARGIN_INLINE = 15;
 const char SBOX_MARGIN_BLOCK = 5;
 
-int apple_x;
-int apple_y;
-const char APPLE = '@';
+struct vec2 apple;
+const char *APPLE = "@";
 
-int snake_x;
-int snake_y;
-const char SNAKE_HEAD = '$';
-const char SNAKE_BODY = '*';
+const char *SNAKE_HEAD = "x";
+const char *SNAKE_BODY = "*";
+struct snake_t snake;
+struct vec2 snake_last_positions[SNAKE_MAX_LENGTH];
+
+bool over = false;
 
 int main(int argc, char **argv) {
   setup();
-  loop();
+  update();
   return 0;
 }
 
@@ -53,76 +61,117 @@ void setup(void) {
   getmaxyx(stdscr, screen_height, screen_width);
   sbox_width = screen_width - SBOX_MARGIN_INLINE * 2;
   sbox_height = screen_height - SBOX_MARGIN_BLOCK * 2;
-  sbox = newwin(sbox_height, sbox_width, SBOX_MARGIN_BLOCK, SBOX_MARGIN_INLINE);
+  game_box =
+      newwin(sbox_height, sbox_width, SBOX_MARGIN_BLOCK, SBOX_MARGIN_INLINE);
 
-  apple_x = rand_int(4, sbox_width - 2);
-  apple_y = rand_int(4, sbox_height - 2);
+  apple.x = rand_int(4, sbox_width - 2);
+  apple.y = rand_int(4, sbox_height - 2);
 
-  snake_x = 2;
-  snake_y = 2;
+  /*snake.length = 1;*/
+  /*snake.parts[0].x = 1;*/
+  /*snake.parts[0].y = 1;*/
+  /*snake.speed.x = 2;*/
+  /*snake.speed.y = 0;*/
+
+  snake.length = 4;
+  snake.positions[0].x = 4;
+  snake.positions[0].y = 1;
+  snake.positions[1].x = 3;
+  snake.positions[1].y = 1;
+  snake.positions[2].x = 2;
+  snake.positions[2].y = 1;
+  snake.positions[3].x = 1;
+  snake.positions[3].y = 1;
+  snake.speed.x = 2;
+  snake.speed.y = 0;
 }
 
-void loop(void) {
+void update(void) {
   int key_input;
-  bool exit = false;
-  enum snake_direction snake_dir = right;
 
-  while (!exit) {
+  while (!over) {
+    usleep(DELAY_IN_MICROSECOND);
     getmaxyx(stdscr, screen_height, screen_width);
-    box(sbox, 0, 0);
 
     key_input = getch();
     switch (key_input) {
       case 'q': {
-        exit = true;
+        over = true;
         break;
       }
       case KEY_UP: {
-        snake_dir = up;
+        if (snake.speed.y == 0) {
+          snake.speed.x = 0;
+          snake.speed.y = -1;
+        }
+
         break;
       }
       case KEY_DOWN: {
-        snake_dir = down;
+        if (snake.speed.y == 0) {
+          snake.speed.x = 0;
+          snake.speed.y = 1;
+        }
+
         break;
       }
       case KEY_RIGHT: {
-        snake_dir = right;
+        if (snake.speed.x == 0) {
+          snake.speed.x = 2;
+          snake.speed.y = 0;
+        }
+
         break;
       }
       case KEY_LEFT: {
-        snake_dir = left;
+        if (snake.speed.x == 0) {
+          snake.speed.x = -2;
+          snake.speed.y = 0;
+        }
+
         break;
       }
     }
 
-    switch (snake_dir) {
-      case up: {
-        snake_y--;
-        break;
-      }
-      case down: {
-        snake_y++;
-        break;
-      }
-      case right: {
-        snake_x++;
-        break;
-      }
-      case left: {
-        snake_x--;
-        break;
+    // snake movement
+    for (int i = 0; i < snake.length; i++) {
+      snake_last_positions[i] = snake.positions[i];
+    }
+    for (int i = 0; i < snake.length; i++) {
+      if (i == 0) {
+        snake.positions[i].x += snake.speed.x;
+        snake.positions[i].y += snake.speed.y;
+      } else {
+        snake.positions[i] = snake_last_positions[i - 1];
       }
     }
-    mvwprintw(sbox, snake_y, snake_x, "****$");
 
-    mvwprintw(sbox, apple_y, apple_x, "%c", APPLE);
-
-    wrefresh(sbox);
-    usleep(DELAY_IN_MICROSECOND);
-    wclear(sbox);
+    draw();
   }
 
   endwin();
+}
+
+void draw(void) {
+  wclear(game_box);
+
+  // box
+  box(game_box, 0, 0);
+
+  // snake
+  mvwprintw(game_box, snake.positions[0].y, snake.positions[0].x, SNAKE_HEAD);
+  for (int i = 1; i < snake.length; i++) {
+    int sx = snake.positions[i].x;
+    int sy = snake.positions[i].y;
+    if (sx != 0 && sy != 0) {
+      mvwprintw(game_box, sy, sx, SNAKE_BODY);
+    }
+  }
+
+  // apple
+  mvwprintw(game_box, apple.y, apple.x, APPLE);
+
+  wrefresh(game_box);
 }
 
 int rand_int(int min, int max) {
