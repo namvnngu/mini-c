@@ -8,16 +8,9 @@
 
 #define SNAKE_MAX_LENGTH 256
 
-struct Vec2 {
+struct vec2 {
   int x;
   int y;
-};
-
-struct Snake {
-  struct Vec2 positions[SNAKE_MAX_LENGTH];
-  struct Vec2 last_positions[SNAKE_MAX_LENGTH];
-  struct Vec2 speed;
-  int length;
 };
 
 void setup(void);
@@ -35,12 +28,19 @@ int game_box_height;
 const char GAME_BOX_MARGIN_INLINE = 15;
 const char GAME_BOX_MARGIN_BLOCK = 5;
 
-struct Vec2 apple;
+struct vec2 apple;
 const char *APPLE = "@";
 
 const char *SNAKE_HEAD = "x";
 const char *SNAKE_BODY = "*";
-struct Snake snake;
+const int SNAKE_ABS_X_SPEED = 2;
+const int SNAKE_ABS_Y_SPEED = 1;
+struct {
+  struct vec2 positions[SNAKE_MAX_LENGTH];
+  struct vec2 last_positions[SNAKE_MAX_LENGTH];
+  struct vec2 speed;
+  int length;
+} snake;
 
 bool over = false;
 
@@ -51,6 +51,8 @@ int main(int argc, char **argv) {
 }
 
 void setup(void) {
+  srand(time(NULL));
+
   initscr();
   noecho();
   cbreak();
@@ -67,21 +69,11 @@ void setup(void) {
   apple.x = rand_int(4, game_box_width - 2);
   apple.y = rand_int(4, game_box_height - 2);
 
-  /*snake.length = 1;*/
-  /*snake.parts[0].x = 1;*/
-  /*snake.parts[0].y = 1;*/
-  /*snake.speed.x = 2;*/
-  /*snake.speed.y = 0;*/
-
-  snake.length = 4;
-  snake.positions[0].x = 4;
+  snake.length = 2;
+  snake.positions[0].x = 2;
   snake.positions[0].y = 1;
-  snake.positions[1].x = 3;
+  snake.positions[1].x = 1;
   snake.positions[1].y = 1;
-  snake.positions[2].x = 2;
-  snake.positions[2].y = 1;
-  snake.positions[3].x = 1;
-  snake.positions[3].y = 1;
   snake.speed.x = 2;
   snake.speed.y = 0;
 }
@@ -102,7 +94,7 @@ void update(void) {
       case KEY_UP: {
         if (snake.speed.y == 0) {
           snake.speed.x = 0;
-          snake.speed.y = -1;
+          snake.speed.y = -SNAKE_ABS_Y_SPEED;
         }
 
         break;
@@ -110,14 +102,14 @@ void update(void) {
       case KEY_DOWN: {
         if (snake.speed.y == 0) {
           snake.speed.x = 0;
-          snake.speed.y = 1;
+          snake.speed.y = SNAKE_ABS_Y_SPEED;
         }
 
         break;
       }
       case KEY_RIGHT: {
         if (snake.speed.x == 0) {
-          snake.speed.x = 2;
+          snake.speed.x = SNAKE_ABS_X_SPEED;
           snake.speed.y = 0;
         }
 
@@ -125,7 +117,7 @@ void update(void) {
       }
       case KEY_LEFT: {
         if (snake.speed.x == 0) {
-          snake.speed.x = -2;
+          snake.speed.x = -SNAKE_ABS_X_SPEED;
           snake.speed.y = 0;
         }
 
@@ -144,6 +136,27 @@ void update(void) {
       } else {
         snake.positions[i] = snake.last_positions[i - 1];
       }
+    }
+
+    // collision
+    bool is_x_collided =
+        (snake.speed.x == 0 && snake.positions[0].x == apple.x) ||
+        (snake.speed.x > 0 && snake.positions[0].x <= apple.x &&
+         apple.x < snake.positions[0].x + snake.speed.x) ||
+        (snake.speed.x < 0 && snake.positions[0].x + snake.speed.x < apple.x &&
+         apple.x <= snake.positions[0].x);
+    bool is_y_collided =
+        (snake.speed.y == 0 && snake.positions[0].y == apple.y) ||
+        (snake.speed.y > 0 && snake.positions[0].y <= apple.y &&
+         apple.y < snake.positions[0].y + snake.speed.y) ||
+        (snake.speed.y < 0 && snake.positions[0].y + snake.speed.y < apple.y &&
+         apple.y <= snake.positions[0].y);
+    if (is_x_collided && is_y_collided) {
+      snake.positions[snake.length] = snake.positions[snake.length - 1];
+      snake.length += 1;
+
+      apple.x = rand_int(4, game_box_width - 2);
+      apple.y = rand_int(4, game_box_height - 2);
     }
 
     draw();
@@ -175,6 +188,5 @@ void draw(void) {
 }
 
 int rand_int(int min, int max) {
-  srand(time(NULL));
-  return min + random() % (max - min + 1);
+  return min + rand() % (max - min + 1);
 }
