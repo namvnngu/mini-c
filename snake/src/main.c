@@ -8,14 +8,15 @@
 
 #define SNAKE_MAX_LENGTH 256
 
-struct vec2 {
+struct Vec2 {
   int x;
   int y;
 };
 
-struct snake_t {
-  struct vec2 positions[SNAKE_MAX_LENGTH];
-  struct vec2 speed;
+struct Snake {
+  struct Vec2 positions[SNAKE_MAX_LENGTH];
+  struct Vec2 last_positions[SNAKE_MAX_LENGTH];
+  struct Vec2 speed;
   int length;
 };
 
@@ -29,18 +30,17 @@ int screen_width = 0;
 int screen_height = 0;
 
 WINDOW *game_box;
-int sbox_width;
-int sbox_height;
-const char SBOX_MARGIN_INLINE = 15;
-const char SBOX_MARGIN_BLOCK = 5;
+int game_box_width;
+int game_box_height;
+const char GAME_BOX_MARGIN_INLINE = 15;
+const char GAME_BOX_MARGIN_BLOCK = 5;
 
-struct vec2 apple;
+struct Vec2 apple;
 const char *APPLE = "@";
 
 const char *SNAKE_HEAD = "x";
 const char *SNAKE_BODY = "*";
-struct snake_t snake;
-struct vec2 snake_last_positions[SNAKE_MAX_LENGTH];
+struct Snake snake;
 
 bool over = false;
 
@@ -59,13 +59,13 @@ void setup(void) {
   nodelay(stdscr, TRUE);
 
   getmaxyx(stdscr, screen_height, screen_width);
-  sbox_width = screen_width - SBOX_MARGIN_INLINE * 2;
-  sbox_height = screen_height - SBOX_MARGIN_BLOCK * 2;
-  game_box =
-      newwin(sbox_height, sbox_width, SBOX_MARGIN_BLOCK, SBOX_MARGIN_INLINE);
+  game_box_width = screen_width - GAME_BOX_MARGIN_INLINE * 2;
+  game_box_height = screen_height - GAME_BOX_MARGIN_BLOCK * 2;
+  game_box = newwin(game_box_height, game_box_width, GAME_BOX_MARGIN_BLOCK,
+                    GAME_BOX_MARGIN_INLINE);
 
-  apple.x = rand_int(4, sbox_width - 2);
-  apple.y = rand_int(4, sbox_height - 2);
+  apple.x = rand_int(4, game_box_width - 2);
+  apple.y = rand_int(4, game_box_height - 2);
 
   /*snake.length = 1;*/
   /*snake.parts[0].x = 1;*/
@@ -135,14 +135,14 @@ void update(void) {
 
     // snake movement
     for (int i = 0; i < snake.length; i++) {
-      snake_last_positions[i] = snake.positions[i];
+      snake.last_positions[i] = snake.positions[i];
     }
     for (int i = 0; i < snake.length; i++) {
       if (i == 0) {
         snake.positions[i].x += snake.speed.x;
         snake.positions[i].y += snake.speed.y;
       } else {
-        snake.positions[i] = snake_last_positions[i - 1];
+        snake.positions[i] = snake.last_positions[i - 1];
       }
     }
 
