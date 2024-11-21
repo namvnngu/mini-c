@@ -151,10 +151,10 @@ void update(void) {
          apple.y < snake.positions[0].y + snake.speed.y) ||
         (snake.speed.y < 0 && snake.positions[0].y + snake.speed.y < apple.y &&
          apple.y <= snake.positions[0].y);
+
     if (is_x_collided && is_y_collided) {
       snake.positions[snake.length] = snake.positions[snake.length - 1];
       snake.length += 1;
-
       apple.x = rand_int(4, game_box_width - 2);
       apple.y = rand_int(4, game_box_height - 2);
     }
