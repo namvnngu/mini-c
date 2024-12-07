@@ -5,12 +5,11 @@
 #include <time.h>
 #include <unistd.h>
 
-#define DELAY_IN_MICROSECOND 50000
-
 #define APPLE "  "
-
 #define SNAKE "  "
-#define SNAKE_MAX_LENGTH 256
+#define WALL_WIDTH 50
+#define WALL_HEIGHT 25
+#define DELAY_IN_MICROSECOND 75000
 
 struct vec2 {
   int x;
@@ -24,192 +23,190 @@ enum direction {
   WEST,
 };
 
-void setup(void);
-void update(void);
-void draw(void);
+void game_setup(void);
+void game_loop(void);
 
-int rand_int(int min, int max);
+void wall_init(void);
+void wall_update(void);
+void wall_draw(void);
+
+void snake_init(void);
+void snake_update(int key_input);
+void snake_draw(void);
+
+void apple_init(void);
+void apple_update(void);
+void apple_draw(void);
+void apple_generate(void);
+
+int random_range(int min, int max);
 
 int screen_width = 0;
 int screen_height = 0;
 
-WINDOW *game_box;
-int game_box_width;
-int game_box_height;
-const char GAME_BOX_MARGIN_INLINE = 50;
-const char GAME_BOX_MARGIN_BLOCK = 10;
+WINDOW *wall;
+const int ROW_COLUMN_RATIO = 2;
 
-struct vec2 apple;
-const int APPLE_COLOR_PAIR = 1;
+struct {
+  struct vec2 position;
+} apple;
+const int APPLE_COLOR_PAIR_ID = 1;
 const int APPLE_OCCIPED_SPACES = strlen(APPLE);
 
-const int SNAKE_COLOR_PAIR = 2;
+const int SNAKE_COLOR_PAIR_ID = 2;
 const int SNAKE_ABS_X_SPEED = 2;
 const int SNAKE_ABS_Y_SPEED = 1;
 const int SNAKE_OCCUPIED_SPACES = strlen(SNAKE);
 struct {
-  struct vec2 positions[SNAKE_MAX_LENGTH];
-  struct vec2 last_positions[SNAKE_MAX_LENGTH];
-  struct vec2 speed;
   int length;
+  struct vec2 body[WALL_WIDTH * WALL_HEIGHT];
   enum direction direction;
 } snake;
 
-bool over = false;
-
 int main(int argc, char **argv) {
-  setup();
-  update();
+  game_setup();
+  game_loop();
   return 0;
 }
 
-void setup(void) {
-  srand(time(NULL));
+void game_setup(void) {
+  srand(time(NULL)); // Seed random number generator
 
-  initscr();
-  noecho();
-  cbreak();
-  curs_set(FALSE);
-  keypad(stdscr, TRUE);
-  nodelay(stdscr, TRUE);
+  initscr();             // Initialize the screen
+  cbreak();              // Disable line buffering
+  noecho();              // Don't show typed characters
+  curs_set(FALSE);       // Hide the cursor
+  keypad(stdscr, TRUE);  // Enable special keys like arrows
+  nodelay(stdscr, TRUE); // Enable non-blocking user input
 
   start_color();
   use_default_colors();
-  init_pair(SNAKE_COLOR_PAIR, -1, COLOR_WHITE);
-  init_pair(APPLE_COLOR_PAIR, -1, COLOR_RED);
 
-  getmaxyx(stdscr, screen_height, screen_width);
-  game_box_width = screen_width - GAME_BOX_MARGIN_INLINE * 2;
-  game_box_height = screen_height - GAME_BOX_MARGIN_BLOCK * 2;
-  game_box = newwin(game_box_height, game_box_width, GAME_BOX_MARGIN_BLOCK,
-                    GAME_BOX_MARGIN_INLINE);
-
-  apple.x = rand_int(4, game_box_width - 2);
-  apple.y = rand_int(4, game_box_height - 2);
-
-  snake.length = 1;
-  snake.positions[0].x = SNAKE_OCCUPIED_SPACES;
-  snake.positions[0].y = 1;
-  snake.speed.x = SNAKE_ABS_X_SPEED;
-  snake.speed.y = 0;
-  snake.direction = EAST;
+  wall_init();
+  snake_init();
+  apple_init();
 }
+void game_loop(void) {
+  bool is_over = false;
+  while (!is_over) {
+    wclear(wall);
 
-void update(void) {
-  int key_input;
+    int key_input = getch();
 
-  while (!over) {
+    wall_update();
+    snake_update(key_input);
+    apple_update();
+
+    wall_draw();
+    snake_draw();
+    apple_draw();
+
+    wrefresh(wall);
+
     usleep(DELAY_IN_MICROSECOND);
-    getmaxyx(stdscr, screen_height, screen_width);
-
-    key_input = getch();
-    switch (key_input) {
-      case 'q': {
-        over = true;
-        break;
-      }
-      case KEY_UP: {
-        if (snake.speed.y == 0) {
-          snake.speed.x = 0;
-          snake.speed.y = -SNAKE_ABS_Y_SPEED;
-          snake.direction = NORTH;
-        }
-
-        break;
-      }
-      case KEY_DOWN: {
-        if (snake.speed.y == 0) {
-          snake.speed.x = 0;
-          snake.speed.y = SNAKE_ABS_Y_SPEED;
-          snake.direction = SOUTH;
-        }
-
-        break;
-      }
-      case KEY_RIGHT: {
-        if (snake.speed.x == 0) {
-          snake.speed.x = SNAKE_ABS_X_SPEED;
-          snake.speed.y = 0;
-          snake.direction = EAST;
-        }
-
-        break;
-      }
-      case KEY_LEFT: {
-        if (snake.speed.x == 0) {
-          snake.speed.x = -SNAKE_ABS_X_SPEED;
-          snake.speed.y = 0;
-          snake.direction = WEST;
-        }
-
-        break;
-      }
-    }
-
-    // snake movement
-    for (int i = 0; i < snake.length; i++) {
-      snake.last_positions[i] = snake.positions[i];
-    }
-    for (int i = 0; i < snake.length; i++) {
-      if (i == 0) {
-        snake.positions[i].x += snake.speed.x;
-        snake.positions[i].y += snake.speed.y;
-      } else {
-        snake.positions[i] = snake.last_positions[i - 1];
-      }
-    }
-
-    // collision
-    bool is_x_collided =
-        (snake.speed.x == 0 && snake.positions[0].x == apple.x) ||
-        (snake.speed.x > 0 && snake.positions[0].x <= apple.x &&
-         apple.x < snake.positions[0].x + snake.speed.x) ||
-        (snake.speed.x < 0 && snake.positions[0].x + snake.speed.x < apple.x &&
-         apple.x <= snake.positions[0].x);
-    bool is_y_collided =
-        (snake.speed.y == 0 && snake.positions[0].y == apple.y) ||
-        (snake.speed.y > 0 && snake.positions[0].y <= apple.y &&
-         apple.y < snake.positions[0].y + snake.speed.y) ||
-        (snake.speed.y < 0 && snake.positions[0].y + snake.speed.y < apple.y &&
-         apple.y <= snake.positions[0].y);
-    if (is_x_collided && is_y_collided) {
-      snake.positions[snake.length] = snake.positions[snake.length - 1];
-      snake.length += 1;
-      apple.x = rand_int(4, game_box_width - 2);
-      apple.y = rand_int(4, game_box_height - 2);
-    }
-
-    draw();
   }
 
   endwin();
 }
 
-void draw(void) {
-  wclear(game_box);
-
-  // box
-  box(game_box, 0, 0);
-
-  // snake
-  wattron(game_box, COLOR_PAIR(SNAKE_COLOR_PAIR));
-  for (int i = 0; i < snake.length; i++) {
-    int sx = snake.positions[i].x;
-    int sy = snake.positions[i].y;
-    if (sx != 0 && sy != 0) {
-      mvwprintw(game_box, sy, sx, SNAKE);
-    }
-  }
-  wattroff(game_box, COLOR_PAIR(SNAKE_COLOR_PAIR));
-
-  // apple
-  wattron(game_box, COLOR_PAIR(APPLE_COLOR_PAIR));
-  mvwprintw(game_box, apple.y, apple.x + APPLE_OCCIPED_SPACES, APPLE);
-  wattroff(game_box, COLOR_PAIR(APPLE_COLOR_PAIR));
-
-  wrefresh(game_box);
+void wall_init(void) {
+  getmaxyx(stdscr, screen_height, screen_width);
+  wall = newwin(WALL_HEIGHT, WALL_WIDTH, 0, 0);
+}
+void wall_update(void) {
+  getmaxyx(stdscr, screen_height, screen_width);
+}
+void wall_draw(void) {
+  box(wall, 0, 0);
 }
 
-int rand_int(int min, int max) {
+void snake_init(void) {
+  init_pair(SNAKE_COLOR_PAIR_ID, -1, COLOR_WHITE);
+  snake.length = 1;
+  snake.body[0].x = SNAKE_OCCUPIED_SPACES;
+  snake.body[0].y = 1;
+  snake.direction = EAST;
+}
+void snake_update(int key_input) {
+  for (int i = snake.length - 1; i > 0; i--) {
+    snake.body[i] = snake.body[i - 1];
+  }
+
+  switch (key_input) {
+    case KEY_UP: {
+      if (snake.direction != SOUTH) {
+        snake.direction = NORTH;
+      }
+      break;
+    }
+    case KEY_DOWN: {
+      if (snake.direction != NORTH) {
+        snake.direction = SOUTH;
+      }
+      break;
+    }
+    case KEY_RIGHT: {
+      if (snake.direction != WEST) {
+        snake.direction = EAST;
+      }
+      break;
+    }
+    case KEY_LEFT: {
+      if (snake.direction != EAST) {
+        snake.direction = WEST;
+      }
+      break;
+    }
+  }
+
+  switch (snake.direction) {
+    case NORTH: {
+      snake.body[0].y -= SNAKE_ABS_Y_SPEED;
+      break;
+    }
+    case SOUTH: {
+      snake.body[0].y += SNAKE_ABS_Y_SPEED;
+      break;
+    }
+    case EAST: {
+      snake.body[0].x += SNAKE_ABS_X_SPEED;
+      break;
+    }
+    case WEST: {
+      snake.body[0].x -= SNAKE_ABS_X_SPEED;
+      break;
+    }
+  }
+}
+void snake_draw(void) {
+  wattron(wall, COLOR_PAIR(SNAKE_COLOR_PAIR_ID));
+  for (int i = 0; i < snake.length; i++) {
+    int sx = snake.body[i].x;
+    int sy = snake.body[i].y;
+    if (sx != 0 && sy != 0) {
+      mvwprintw(wall, sy, sx, SNAKE);
+    }
+  }
+  wattroff(wall, COLOR_PAIR(SNAKE_COLOR_PAIR_ID));
+}
+
+void apple_init(void) {
+  init_pair(APPLE_COLOR_PAIR_ID, -1, COLOR_RED);
+  apple_generate();
+}
+void apple_update(void) {
+}
+void apple_draw(void) {
+  wattron(wall, COLOR_PAIR(APPLE_COLOR_PAIR_ID));
+  mvwprintw(wall, apple.position.y, apple.position.x + APPLE_OCCIPED_SPACES,
+            APPLE);
+  wattroff(wall, COLOR_PAIR(APPLE_COLOR_PAIR_ID));
+}
+void apple_generate(void) {
+  apple.position.x = random_range(1, WALL_WIDTH - 3);
+  apple.position.y = random_range(1, WALL_HEIGHT - 1);
+}
+
+int random_range(int min, int max) {
   return min + rand() % (max - min + 1);
 }
