@@ -5,20 +5,14 @@
 #include <time.h>
 #include <unistd.h>
 
-#define DELAY_IN_MICROSECOND 75000
-#define CELL_WIDTH 2
-#define CELL_HEIGHT 1
-
 struct vec2 {
   int x;
   int y;
 };
-
 struct size2 {
   int width;
   int height;
 };
-
 enum direction {
   NORTH,
   EAST,
@@ -26,25 +20,29 @@ enum direction {
   WEST,
 };
 
-struct {
-  struct size2 size;
-} screen;
-
 void game_setup(void);
 void game_loop(void);
 
 struct {
-  WINDOW *win;
-  struct vec2 position;
   struct size2 size;
-  int border_width;
-} map;
-void map_init(void);
-void map_update(void);
-void map_draw(void);
+} screen;
+void screen_update_size(void);
 
 struct {
-  int parts_length;
+  WINDOW *win;
+  struct size2 size;
+  int border_width;
+  int width_height_terminal_ratio;
+} map;
+void map_init(void);
+void map_update(int key_input);
+void map_draw(void);
+void map_clear(void);
+void map_refresh(void);
+void map_point_draw(struct vec2 position, int color_pair_id);
+
+struct {
+  int length;
   struct vec2 *parts;
   struct size2 part_size;
   enum direction direction;
@@ -70,14 +68,13 @@ void apple_generate(void);
 int random_range(int min, int max);
 
 int main(int argc, char **argv) {
+  srand(time(NULL));
   game_setup();
   game_loop();
   return 0;
 }
 
 void game_setup(void) {
-  srand(time(NULL)); // Seed random number generator
-
   initscr();             // Initialize the screen
   cbreak();              // Disable line buffering
   noecho();              // Don't show typed characters
@@ -94,46 +91,61 @@ void game_setup(void) {
 void game_loop(void) {
   bool is_over = false;
   while (!is_over) {
-    wclear(map.win);
-
     int key_input = getch();
 
-    map_update();
-    snake_update(key_input);
-    apple_update();
+    map_clear();
+    map_update(key_input);
+    map_draw();
+    map_refresh();
 
     if (snake_hit_wall() || snake_hit_itself()) {
       is_over = true;
       continue;
     }
 
-    map_draw();
-    snake_draw();
-    apple_draw();
-
-    wrefresh(map.win);
-
-    usleep(DELAY_IN_MICROSECOND);
+    usleep(75000);
   }
 
   endwin();
 }
 
-void map_init(void) {
+void screen_update_size(void) {
   getmaxyx(stdscr, screen.size.height, screen.size.width);
-  map.size.width = 50;
+}
+
+void map_init(void) {
+  screen_update_size();
+  map.size.width = 25;
   map.size.height = 25;
-  map.position.x = screen.size.width / 2 - map.size.width / 2;
-  map.position.y = screen.size.height / 2 - map.size.height / 2;
+  map.width_height_terminal_ratio = 2;
   map.win =
-      newwin(map.size.height, map.size.width, map.position.y, map.position.x);
+      newwin(map.size.height, map.size.width * map.width_height_terminal_ratio,
+             screen.size.height / 2 - map.size.height / 2,
+             screen.size.width / 2 -
+                 (map.size.width * map.width_height_terminal_ratio) / 2);
   map.border_width = 1;
 }
-void map_update(void) {
-  getmaxyx(stdscr, screen.size.height, screen.size.width);
+void map_update(int key_input) {
+  screen_update_size();
+  snake_update(key_input);
+  apple_update();
 }
 void map_draw(void) {
-  box(map.win, 0, 0); // Drawer border
+  box(map.win, 0, 0);
+  snake_draw();
+  apple_draw();
+}
+void map_clear(void) {
+  wclear(map.win);
+}
+void map_refresh(void) {
+  wrefresh(map.win);
+}
+void map_point_draw(struct vec2 position, int color_pair_id) {
+  wattron(map.win, COLOR_PAIR(color_pair_id));
+  mvwprintw(map.win, position.y, position.x * map.width_height_terminal_ratio,
+            "  ");
+  wattroff(map.win, COLOR_PAIR(color_pair_id));
 }
 
 void snake_init(void) {
@@ -145,7 +157,7 @@ void snake_init(void) {
   }
 
   snake.parts = parts;
-  snake.parts_length = 1;
+  snake.length = 1;
   snake.part_size.width = 1;
   snake.part_size.height = 1;
   snake.parts[0].x = 1;
@@ -155,7 +167,7 @@ void snake_init(void) {
   init_pair(snake.color_pair_id, -1, COLOR_BLUE);
 }
 void snake_update(int key_input) {
-  for (int i = snake.parts_length - 1; i > 0; i--) {
+  for (int i = snake.length - 1; i > 0; i--) {
     snake.parts[i] = snake.parts[i - 1];
   }
 
@@ -188,25 +200,25 @@ void snake_update(int key_input) {
 
   switch (snake.direction) {
     case NORTH: {
-      snake.parts[0].y -= snake.part_size.height * CELL_HEIGHT;
+      snake.parts[0].y--;
       break;
     }
     case SOUTH: {
-      snake.parts[0].y += snake.part_size.height * CELL_HEIGHT;
-      break;
-    }
-    case EAST: {
-      snake.parts[0].x += snake.part_size.width * CELL_WIDTH;
+      snake.parts[0].y++;
       break;
     }
     case WEST: {
-      snake.parts[0].x -= snake.part_size.width * CELL_WIDTH;
+      snake.parts[0].x--;
+      break;
+    }
+    case EAST: {
+      snake.parts[0].x++;
       break;
     }
   }
 
   if (snake_hit_apple()) {
-    snake.parts_length++;
+    snake.length++;
     apple_generate();
   }
 }
@@ -215,7 +227,7 @@ bool snake_hit_wall(void) {
          snake.parts[0].y <= 0 || snake.parts[0].y >= map.size.height - 1;
 }
 bool snake_hit_itself(void) {
-  for (int i = 1; i < snake.parts_length; i++) {
+  for (int i = 1; i < snake.length; i++) {
     if (snake.parts[i].x == snake.parts[0].x &&
         snake.parts[i].y == snake.parts[0].y) {
       return true;
@@ -228,15 +240,11 @@ bool snake_hit_apple(void) {
          snake.parts[0].y == apple.position.y;
 }
 void snake_draw(void) {
-  wattron(map.win, COLOR_PAIR(snake.color_pair_id));
-  for (int i = 0; i < snake.parts_length; i++) {
-    int sx = snake.parts[i].x;
-    int sy = snake.parts[i].y;
-    if (sx != 0 && sy != 0) {
-      mvwprintw(map.win, sy, sx, "  ");
+  for (int i = 0; i < snake.length; i++) {
+    if (snake.parts[i].x != 0 && snake.parts[i].y != 0) {
+      map_point_draw(snake.parts[i], snake.color_pair_id);
     }
   }
-  wattroff(map.win, COLOR_PAIR(snake.color_pair_id));
 }
 
 void apple_init(void) {
@@ -249,24 +257,18 @@ void apple_init(void) {
 void apple_update(void) {
 }
 void apple_draw(void) {
-  wattron(map.win, COLOR_PAIR(apple.color_pair_id));
-  mvwprintw(map.win, apple.position.y, apple.position.x, "  ");
-  wattroff(map.win, COLOR_PAIR(apple.color_pair_id));
+  map_point_draw(apple.position, apple.color_pair_id);
 }
 void apple_generate(void) {
   bool found = false;
   while (!found) {
-    apple.position.x = random_range(1, map.size.width - map.border_width -
-                                           apple.size.width * CELL_WIDTH);
-    apple.position.y = random_range(1, map.size.height - map.border_width -
-                                           apple.size.height * CELL_HEIGHT);
-
-    if ((apple.position.x % 2) != (snake.parts[0].x % 2)) {
-      continue;
-    }
+    apple.position.x =
+        random_range(1, map.size.width - map.border_width - apple.size.width);
+    apple.position.y =
+        random_range(1, map.size.height - map.border_width - apple.size.height);
 
     bool is_within_snake_body = false;
-    for (int i = 0; i < snake.parts_length; i++) {
+    for (int i = 0; i < snake.length; i++) {
       if (snake.parts[i].x == apple.position.x &&
           snake.parts[i].y == apple.position.y) {
         is_within_snake_body = true;
