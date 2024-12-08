@@ -72,6 +72,17 @@ void apple_update(void);
 void apple_draw(void);
 void apple_generate_position(void);
 
+struct {
+  int point;
+  WINDOW *win;
+  struct size2 size;
+} score;
+void score_init(void);
+void score_update(void);
+void score_draw(void);
+void score_clear(void);
+void score_refresh(void);
+
 int random_range(int min, int max);
 
 int main(int argc, char **argv) {
@@ -101,9 +112,16 @@ void game_loop(void) {
     int key_input = getch();
 
     map_clear();
+    score_clear();
+
     map_update(key_input);
+    score_update();
+
     map_draw();
+    score_draw();
+
     map_refresh();
+    score_refresh();
 
     usleep(75000);
   }
@@ -290,6 +308,19 @@ void apple_generate_position(void) {
 
     found = true;
   }
+}
+
+void score_init(void) {
+}
+void score_update(void) {
+}
+void score_draw(void) {
+}
+void score_clear(void) {
+  wclear(score.win);
+}
+void score_refresh(void) {
+  wrefresh(score.win);
 }
 
 int random_range(int min, int max) {
