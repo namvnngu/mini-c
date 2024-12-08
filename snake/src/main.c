@@ -20,7 +20,10 @@ enum direction {
   WEST,
 };
 
-void game_setup(void);
+struct {
+  bool is_over;
+} game;
+void game_init(void);
 void game_loop(void);
 
 struct {
@@ -69,12 +72,12 @@ int random_range(int min, int max);
 
 int main(int argc, char **argv) {
   srand(time(NULL));
-  game_setup();
+  game_init();
   game_loop();
   return 0;
 }
 
-void game_setup(void) {
+void game_init(void) {
   initscr();             // Initialize the screen
   cbreak();              // Disable line buffering
   noecho();              // Don't show typed characters
@@ -84,24 +87,19 @@ void game_setup(void) {
   start_color();         // Enable colors (create colors and color pairs)
   use_default_colors();  // Allow default terminal colors
 
+  game.is_over = false;
   map_init();
   snake_init();
   apple_init();
 }
 void game_loop(void) {
-  bool is_over = false;
-  while (!is_over) {
+  while (!game.is_over) {
     int key_input = getch();
 
     map_clear();
     map_update(key_input);
     map_draw();
     map_refresh();
-
-    if (snake_hit_wall() || snake_hit_itself()) {
-      is_over = true;
-      continue;
-    }
 
     usleep(75000);
   }
@@ -215,6 +213,11 @@ void snake_update(int key_input) {
       snake.parts[0].x++;
       break;
     }
+  }
+
+  if (snake_hit_wall() || snake_hit_itself()) {
+    game.is_over = true;
+    return;
   }
 
   if (snake_hit_apple()) {
