@@ -13,7 +13,7 @@ static struct hash_table_pair HASH_TABLE_DELETED_PAIR = {NULL, NULL};
 static const int HASH_TABLE_LOAD_RANGE[2] = {10, 70};
 
 static struct hash_table_pair *_hash_table_pair_new(const char *k,
-                                                   const char *v) {
+                                                    const char *v) {
   struct hash_table_pair *pair = malloc(sizeof(struct hash_table_pair));
   pair->key = strdup(k);
   pair->value = strdup(v);
@@ -91,7 +91,7 @@ static int _hash(const char *s, const int a, const int m) {
 }
 
 static int _hash_table_get_hash(const char *s, const int num_buckets,
-                               const int attempt) {
+                                const int attempt) {
   const int hash_a = _hash(s, HASH_TABLE_PRIME_1, num_buckets);
   if (attempt == 0)
     return hash_a;
