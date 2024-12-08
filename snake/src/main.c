@@ -35,6 +35,9 @@ struct {
   WINDOW *win;
   struct size2 size;
   int border_width;
+  // The width of two characters horizontally is much closer to the height of
+  // one character vertically than the width of one character.
+  // Source: https://stackoverflow.com/a/60046028
   int width_height_terminal_ratio;
 } map;
 void map_init(void);
