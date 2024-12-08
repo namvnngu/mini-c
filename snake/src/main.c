@@ -8,7 +8,7 @@
 // The width of two characters horizontally is much closer to the height of
 // one character vertically than the width of one character.
 // Source: https://stackoverflow.com/a/60046028
-#define WIDTH_HEIGHT_TERMINAL_RATIO 2
+#define TERMINAL_WIDTH_UNIT 2
 
 struct vec2 {
   int x;
@@ -137,11 +137,10 @@ void map_init(void) {
   screen_update_size();
   map.size.width = 25;
   map.size.height = 25;
-  map.win =
-      newwin(map.size.height, map.size.width * WIDTH_HEIGHT_TERMINAL_RATIO,
-             screen.size.height / 2 - map.size.height / 2,
-             screen.size.width / 2 -
-                 (map.size.width * WIDTH_HEIGHT_TERMINAL_RATIO) / 2);
+  map.win = newwin(map.size.height, map.size.width * TERMINAL_WIDTH_UNIT,
+                   screen.size.height / 2 - map.size.height / 2,
+                   screen.size.width / 2 -
+                       (map.size.width * TERMINAL_WIDTH_UNIT) / 2);
   map.border_width = 1;
 }
 void map_update(int key_input) {
@@ -166,8 +165,7 @@ void map_refresh(void) {
 }
 void map_point_draw(struct vec2 position, int color_pair_id) {
   wattron(map.win, COLOR_PAIR(color_pair_id));
-  mvwprintw(map.win, position.y, position.x * WIDTH_HEIGHT_TERMINAL_RATIO,
-            "  ");
+  mvwprintw(map.win, position.y, position.x * TERMINAL_WIDTH_UNIT, "  ");
   wattroff(map.win, COLOR_PAIR(color_pair_id));
 }
 
