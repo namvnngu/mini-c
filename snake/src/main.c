@@ -5,8 +5,6 @@
 #include <time.h>
 #include <unistd.h>
 
-#define APPLE "  "
-#define SNAKE "  "
 #define WALL_WIDTH 50
 #define WALL_HEIGHT 25
 #define DELAY_IN_MICROSECOND 75000
@@ -40,7 +38,7 @@ void snake_draw(void);
 void apple_init(void);
 void apple_update(void);
 void apple_draw(void);
-void apple_random_position(void);
+void apple_generate(void);
 
 int random_range(int min, int max);
 
@@ -132,7 +130,7 @@ void snake_init(void) {
   snake.parts[0].y = 1;
   snake.single_part_presentation = "  ";
   snake.direction = EAST;
-  snake.abs_speed.x = 2;
+  snake.abs_speed.x = strlen(snake.single_part_presentation);
   snake.abs_speed.y = 1;
   snake.color_pair_id = 1;
   init_pair(snake.color_pair_id, -1, COLOR_BLUE);
@@ -190,7 +188,7 @@ void snake_update(int key_input) {
 
   if (snake_hit_apple()) {
     snake.length++;
-    apple_random_position();
+    apple_generate();
   }
 }
 bool snake_hit_wall(void) {
@@ -216,7 +214,7 @@ void snake_draw(void) {
     int sx = snake.parts[i].x;
     int sy = snake.parts[i].y;
     if (sx != 0 && sy != 0) {
-      mvwprintw(wall, sy, sx, SNAKE);
+      mvwprintw(wall, sy, sx, snake.single_part_presentation);
     }
   }
   wattroff(wall, COLOR_PAIR(snake.color_pair_id));
@@ -224,7 +222,7 @@ void snake_draw(void) {
 
 void apple_init(void) {
   apple.presentation = "  ";
-  apple_random_position();
+  apple_generate();
   apple.color_pair_id = 2;
   init_pair(apple.color_pair_id, -1, COLOR_RED);
 }
@@ -232,10 +230,10 @@ void apple_update(void) {
 }
 void apple_draw(void) {
   wattron(wall, COLOR_PAIR(apple.color_pair_id));
-  mvwprintw(wall, apple.position.y, apple.position.x, APPLE);
+  mvwprintw(wall, apple.position.y, apple.position.x, apple.presentation);
   wattroff(wall, COLOR_PAIR(apple.color_pair_id));
 }
-void apple_random_position(void) {
+void apple_generate(void) {
   bool found = false;
   while (!found) {
     int apple_width = strlen(apple.presentation);
