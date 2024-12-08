@@ -100,8 +100,8 @@ void game_loop(void) {
     int key_input = getch();
 
     map_clear();
-    map_update(key_input);
     map_draw();
+    map_update(key_input);
     map_refresh();
 
     usleep(75000);
