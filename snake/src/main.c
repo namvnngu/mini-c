@@ -5,6 +5,11 @@
 #include <time.h>
 #include <unistd.h>
 
+// The width of two characters horizontally is much closer to the height of
+// one character vertically than the width of one character.
+// Source: https://stackoverflow.com/a/60046028
+#define WIDTH_HEIGHT_TERMINAL_RATIO 2
+
 struct vec2 {
   int x;
   int y;
@@ -35,10 +40,6 @@ struct {
   WINDOW *win;
   struct size2 size;
   int border_width;
-  // The width of two characters horizontally is much closer to the height of
-  // one character vertically than the width of one character.
-  // Source: https://stackoverflow.com/a/60046028
-  int width_height_terminal_ratio;
 } map;
 void map_init(void);
 void map_update(int key_input);
@@ -69,7 +70,7 @@ struct {
 void apple_init(void);
 void apple_update(void);
 void apple_draw(void);
-void apple_generate(void);
+void apple_generate_position(void);
 
 int random_range(int min, int max);
 
@@ -100,8 +101,8 @@ void game_loop(void) {
     int key_input = getch();
 
     map_clear();
-    map_draw();
     map_update(key_input);
+    map_draw();
     map_refresh();
 
     usleep(75000);
@@ -118,12 +119,11 @@ void map_init(void) {
   screen_update_size();
   map.size.width = 25;
   map.size.height = 25;
-  map.width_height_terminal_ratio = 2;
   map.win =
-      newwin(map.size.height, map.size.width * map.width_height_terminal_ratio,
+      newwin(map.size.height, map.size.width * WIDTH_HEIGHT_TERMINAL_RATIO,
              screen.size.height / 2 - map.size.height / 2,
              screen.size.width / 2 -
-                 (map.size.width * map.width_height_terminal_ratio) / 2);
+                 (map.size.width * WIDTH_HEIGHT_TERMINAL_RATIO) / 2);
   map.border_width = 1;
 }
 void map_update(int key_input) {
@@ -132,6 +132,10 @@ void map_update(int key_input) {
   apple_update();
 }
 void map_draw(void) {
+  if (game.is_over) {
+    return;
+  }
+
   box(map.win, 0, 0);
   snake_draw();
   apple_draw();
@@ -144,7 +148,7 @@ void map_refresh(void) {
 }
 void map_point_draw(struct vec2 position, int color_pair_id) {
   wattron(map.win, COLOR_PAIR(color_pair_id));
-  mvwprintw(map.win, position.y, position.x * map.width_height_terminal_ratio,
+  mvwprintw(map.win, position.y, position.x * WIDTH_HEIGHT_TERMINAL_RATIO,
             "  ");
   wattroff(map.win, COLOR_PAIR(color_pair_id));
 }
@@ -225,7 +229,7 @@ void snake_update(int key_input) {
 
   if (snake_hit_apple()) {
     snake.length++;
-    apple_generate();
+    apple_generate_position();
   }
 }
 bool snake_hit_wall(void) {
@@ -254,9 +258,9 @@ void snake_draw(void) {
 }
 
 void apple_init(void) {
-  apple_generate();
   apple.size.width = 1;
   apple.size.height = 1;
+  apple_generate_position();
   apple.color_pair_id = 2;
   init_pair(apple.color_pair_id, -1, COLOR_RED);
 }
@@ -265,7 +269,7 @@ void apple_update(void) {
 void apple_draw(void) {
   map_point_draw(apple.position, apple.color_pair_id);
 }
-void apple_generate(void) {
+void apple_generate_position(void) {
   bool found = false;
   while (!found) {
     apple.position.x =
