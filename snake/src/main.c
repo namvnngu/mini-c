@@ -1,3 +1,4 @@
+#include <math.h>
 #include <ncurses.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -38,6 +39,7 @@ void screen_update_size(void);
 
 struct {
   WINDOW *win;
+  struct vec2 win_position;
   struct size2 size;
   int border_width;
 } map;
@@ -73,15 +75,15 @@ void apple_draw(void);
 void apple_generate_position(void);
 
 struct {
-  int point;
+  int score;
   WINDOW *win;
   struct size2 size;
-} score;
-void score_init(void);
-void score_update(void);
-void score_draw(void);
-void score_clear(void);
-void score_refresh(void);
+} scoreboard;
+void scoreboard_init(void);
+void scoreboard_update(void);
+void scoreboard_draw(void);
+void scoreboard_clear(void);
+void scoreboard_refresh(void);
 
 int random_range(int min, int max);
 
@@ -104,6 +106,7 @@ void game_init(void) {
 
   game.is_over = false;
   map_init();
+  scoreboard_init();
   snake_init();
   apple_init();
 }
@@ -112,16 +115,16 @@ void game_loop(void) {
     int key_input = getch();
 
     map_clear();
-    score_clear();
+    scoreboard_clear();
 
     map_update(key_input);
-    score_update();
+    scoreboard_update();
 
     map_draw();
-    score_draw();
+    scoreboard_draw();
 
     map_refresh();
-    score_refresh();
+    scoreboard_refresh();
 
     usleep(75000);
   }
@@ -136,11 +139,12 @@ void screen_update_size(void) {
 void map_init(void) {
   screen_update_size();
   map.size.width = 25;
-  map.size.height = 25;
+  map.size.height = 20;
+  map.win_position.x =
+      screen.size.width / 2 - (map.size.width * TERMINAL_WIDTH_UNIT) / 2;
+  map.win_position.y = screen.size.height / 2 - map.size.height / 2;
   map.win = newwin(map.size.height, map.size.width * TERMINAL_WIDTH_UNIT,
-                   screen.size.height / 2 - map.size.height / 2,
-                   screen.size.width / 2 -
-                       (map.size.width * TERMINAL_WIDTH_UNIT) / 2);
+                   map.win_position.y, map.win_position.x);
   map.border_width = 1;
 }
 void map_update(int key_input) {
@@ -308,17 +312,33 @@ void apple_generate_position(void) {
   }
 }
 
-void score_init(void) {
+void scoreboard_init(void) {
+  scoreboard.score = 0;
+  scoreboard.size.width = 11;
+  scoreboard.size.height = 5;
+  scoreboard.win =
+      newwin(scoreboard.size.height, scoreboard.size.width, map.win_position.y,
+             map.win_position.x - scoreboard.size.width - 2);
 }
-void score_update(void) {
+void scoreboard_update(void) {
+  scoreboard.score = snake.length * 10;
 }
-void score_draw(void) {
+void scoreboard_draw(void) {
+  box(scoreboard.win, 0, 0);
+
+  char *title = "Score";
+  mvwprintw(scoreboard.win, 0, scoreboard.size.width / 2 - strlen(title) / 2,
+            title);
+
+  mvwprintw(scoreboard.win, scoreboard.size.height / 2,
+            scoreboard.size.width / 2 - ((int)log10(scoreboard.score) + 1) / 2,
+            "%d", scoreboard.score);
 }
-void score_clear(void) {
-  wclear(score.win);
+void scoreboard_clear(void) {
+  wclear(scoreboard.win);
 }
-void score_refresh(void) {
-  wrefresh(score.win);
+void scoreboard_refresh(void) {
+  wrefresh(scoreboard.win);
 }
 
 int random_range(int min, int max) {
