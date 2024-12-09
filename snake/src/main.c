@@ -98,9 +98,9 @@ void game_init(void) {
   initscr();             // Initialize the screen
   cbreak();              // Disable line buffering
   noecho();              // Don't show typed characters
-  curs_set(FALSE);       // Hide the cursor
-  keypad(stdscr, TRUE);  // Enable special keys like arrows
-  nodelay(stdscr, TRUE); // Enable non-blocking user input
+  curs_set(false);       // Hide the cursor
+  keypad(stdscr, true);  // Enable special keys like arrows
+  nodelay(stdscr, true); // Enable non-blocking user input
   start_color();         // Enable colors (create colors and color pairs)
   use_default_colors();  // Allow default terminal colors
 
