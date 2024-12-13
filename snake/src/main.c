@@ -6,6 +6,9 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "startwin.h"
+#include "win.h"
+
 // The width of two characters horizontally is much closer to the height of
 // one character vertically than the width of one character.
 // Source: https://stackoverflow.com/a/60046028
@@ -89,20 +92,35 @@ int random_range(int min, int max);
 
 int main(int argc, char **argv) {
   srand(time(NULL));
-  game_init();
-  game_loop();
-  return 0;
+
+  initscr();            // Initialize the screen
+  cbreak();             // Disable line buffering
+  noecho();             // Do not show typed characters
+  curs_set(false);      // Hide the cursor
+  keypad(stdscr, true); // Enable special keys like arrows
+  start_color();        // Enable colors (create colors and color pairs)
+  use_default_colors(); // Allow default terminal colors
+  refresh();            // Draw the screen
+
+  WINDOW *startwin = startwin_new();
+  int key = win_get_key_block(startwin);
+
+  while (true) {
+
+    if (key == 'q') {
+      endwin();
+      return 0;
+    }
+
+    if (key == '\n' || key == ' ') {
+      win_del(startwin);
+      game_init();
+      game_loop();
+    }
+  }
 }
 
 void game_init(void) {
-  initscr();             // Initialize the screen
-  cbreak();              // Disable line buffering
-  noecho();              // Don't show typed characters
-  curs_set(false);       // Hide the cursor
-  keypad(stdscr, true);  // Enable special keys like arrows
-  nodelay(stdscr, true); // Enable non-blocking user input
-  start_color();         // Enable colors (create colors and color pairs)
-  use_default_colors();  // Allow default terminal colors
 
   game.is_over = false;
   map_init();
