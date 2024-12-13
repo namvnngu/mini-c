@@ -9,23 +9,21 @@ CFLAGS += -Wno-pointer-arith -Wno-newline-eof -Wno-unused-parameter -Wno-gnu-sta
 CFLAGS += -Wno-gnu-compound-literal-initializer -Wno-gnu-zero-variadic-macro-arguments -Wunreachable-code
 LDFLAGS = -lncurses
 
-EXE = app
-DIST_DIR = dist
-SRC_DIR = src
-SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
-OBJ_FILES = $(SRC_FILES:%.c=$(DIST_DIR)/%.o)
+BIN = snake
+DIST = dist
+SRC = $(wildcard src/*.c)
+OBJ = $(SRC:%.c=%.o)
 
 .PHONY: all clean
 
-all: dirs app run
-dirs:
-	mkdir -p ./$(DIST_DIR)
-	rsync -a --include='*/' --exclude='*' "$(SRC_DIR)" "$(DIST_DIR)"
+all: prebuild build run
+prebuild:
+	mkdir -p ./$(DIST)
 run:
-	$(DIST_DIR)/$(EXE)
-app: $(OBJ_FILES)
-	$(CC) -o $(DIST_DIR)/$(EXE) $^ $(LDFLAGS)
-$(OBJ_FILES): $(SRC_FILES)
+	$(DIST)/$(BIN)
+build: $(OBJ)
+	$(CC) -o $(DIST)/$(BIN) $^ $(LDFLAGS)
+%.o: %.c
 	$(CC) -o $@ -c $< $(INCFLAGS) $(CFLAGS)
 clean:
-	rm -rf $(DIST_DIR)
+	rm -rf $(DIST) $(OBJ)
