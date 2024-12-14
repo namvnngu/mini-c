@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include <string.h>
 
+#include "flowcmd.h"
 #include "playagainwin.h"
 #include "win.h"
 
@@ -24,16 +25,16 @@ static WINDOW *playagainwin_new(int score) {
   return win;
 }
 
-enum win_cmd playagainwin_run(int score) {
+enum flowcmd playagainwin_run(int score) {
   WINDOW *playagainwin = playagainwin_new(100);
   while (true) {
-    int key = win_get_key_block(playagainwin);
+    int key = win_getkey_block(playagainwin);
     if (key == 'q') {
       return QUIT;
     }
     if (key == '\n') {
       win_del(playagainwin);
-      return NEXT;
+      return CONTINUE;
     }
   }
 }

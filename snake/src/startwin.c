@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <string.h>
 
+#include "flowcmd.h"
 #include "startwin.h"
 #include "win.h"
 
@@ -21,16 +22,16 @@ static WINDOW *startwin_new(void) {
   return win;
 }
 
-enum win_cmd startwin_run(void) {
+enum flowcmd startwin_run(void) {
   WINDOW *startwin = startwin_new();
   while (true) {
-    int key = win_get_key_block(startwin);
+    int key = win_getkey_block(startwin);
     if (key == 'q') {
       return QUIT;
     }
     if (key == '\n') {
       win_del(startwin);
-      return NEXT;
+      return CONTINUE;
     }
   }
 }

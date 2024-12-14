@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
 
   WINDOW *startwin = startwin_new();
   while (true) {
-    int key = win_get_key_block(startwin);
+    int key = win_getkey_block(startwin);
     if (key == 'q') {
       endwin();
       return 0;
@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
 
     WINDOW *playagainwin = playagainwin_new(100);
     while (true) {
-      int key = win_get_key_block(playagainwin);
+      int key = win_getkey_block(playagainwin);
       if (key == 'q') {
         endwin();
         return 0;

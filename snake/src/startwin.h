@@ -1,10 +1,10 @@
 #include <ncurses.h>
 
-#include "win.h"
+#include "flowcmd.h"
 
 #ifndef _START_WIN
 #define _START_WIN
 
-enum win_cmd startwin_run(void);
+enum flowcmd startwin_run(void);
 
 #endif /* _START_WIN */

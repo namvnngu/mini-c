@@ -9,11 +9,11 @@ WINDOW *win_new(int width, int height, int startx, int starty) {
   return win;
 }
 
-int win_get_key_block(WINDOW *win) {
+int win_getkey_block(WINDOW *win) {
   nodelay(win, false);
   return wgetch(win);
 }
-int win_get_key_nonblock(WINDOW *win) {
+int win_getkey_nonblock(WINDOW *win) {
   nodelay(win, true);
   return wgetch(win);
 }

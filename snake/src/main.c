@@ -1,14 +1,12 @@
 #include <ncurses.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
-#include <unistd.h>
 
+#include "flowcmd.h"
 #include "game.h"
 #include "playagainwin.h"
 #include "startwin.h"
-#include "win.h"
 
 int main(int argc, char **argv) {
   srand(time(NULL));
@@ -22,7 +20,7 @@ int main(int argc, char **argv) {
   use_default_colors(); // Allow default terminal colors
   refresh();            // Draw the screen
 
-  enum win_cmd cmd = startwin_run();
+  enum flowcmd cmd = startwin_run();
   while (cmd != QUIT) {
     game_run();
     cmd = playagainwin_run(100);
