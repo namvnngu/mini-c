@@ -1,29 +1,49 @@
-.POSIX:
-.SUFFIXES:
-
 CC = cc
-
-INCFLAGS =
-CFLAGS = -std=c11 -O3 -g -Wall -Wextra -Wpedantic -Wstrict-aliasing
+CFLAGS := -std=c11 -O3 -g -Wall -Wextra -Wpedantic -Wstrict-aliasing
 CFLAGS += -Wno-pointer-arith -Wno-newline-eof -Wno-unused-parameter -Wno-gnu-statement-expression
 CFLAGS += -Wno-gnu-compound-literal-initializer -Wno-gnu-zero-variadic-macro-arguments -Wunreachable-code
-LDFLAGS = -lncurses
+DBGFLAGS := -g
+COBJFLAGS := $(CFLAGS) -c
+INCFLAGS :=
+LDFLAGS := -lncurses
 
-BIN = snake
-DIST = dist
-SRC = $(wildcard src/*.c)
-OBJ = $(SRC:%.c=%.o)
+BIN_PATH := bin
+OBJ_PATH := obj
+SRC_PATH := src
+DBG_PATH := debug
 
-.PHONY: all clean
+TARGET_NAME := snake
+TARGET := $(BIN_PATH)/$(TARGET_NAME)
+TARGET_DBG := $(DBG_PATH)/$(TARGET_NAME)
 
-all: prebuild build run
-prebuild:
-	mkdir -p ./$(DIST)
+SRC := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c)))
+OBJ := $(addprefix $(OBJ_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
+OBJ_DEBUG := $(addprefix $(DBG_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
+
+CLEAN_LIST := $(BIN_PATH) $(OBJ_PATH) $(DBG_PATH)
+
+.PHONY: prepare build run debug clean
+
+default: prepare build run
+
+prepare:
+	@mkdir -p $(BIN_PATH) $(OBJ_PATH) $(DBG_PATH)
+
+build: $(TARGET)
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c*
+	$(CC) $(COBJFLAGS) $(INCFLAGS) -o $@ $<
+
 run:
-	$(DIST)/$(BIN)
-build: $(OBJ)
-	$(CC) -o $(DIST)/$(BIN) $^ $(LDFLAGS)
-%.o: %.c
-	$(CC) -o $@ -c $< $(INCFLAGS) $(CFLAGS)
+	$(TARGET)
+
+debug: $(TARGET_DBG)
+$(TARGET_DBG): $(OBJ_DEBUG)
+	$(CC) $(CFLAGS) $(DBGFLAGS) $(LDFLAGS) -o $@ $^
+$(DBG_PATH)/%.o: $(SRC_PATH)/%.c*
+	$(CC) $(COBJFLAGS) $(DBGFLAGS) $(INCFLAGS) -o $@ $<
+
 clean:
-	rm -rf $(DIST) $(OBJ)
+	@rm -rf $(CLEAN_LIST)
+	@echo Removed $(CLEAN_LIST)
