@@ -6,6 +6,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "playagainwin.h"
 #include "startwin.h"
 #include "win.h"
 
@@ -103,19 +104,33 @@ int main(int argc, char **argv) {
   refresh();            // Draw the screen
 
   WINDOW *startwin = startwin_new();
-  int key = win_get_key_block(startwin);
-
   while (true) {
-
+    int key = win_get_key_block(startwin);
     if (key == 'q') {
       endwin();
       return 0;
     }
-
-    if (key == '\n' || key == ' ') {
+    if (key == '\n') {
       win_del(startwin);
-      game_init();
-      game_loop();
+      break;
+    }
+  }
+
+  while (true) {
+    game_init();
+    game_loop();
+
+    WINDOW *playagainwin = playagainwin_new(100);
+    while (true) {
+      int key = win_get_key_block(playagainwin);
+      if (key == 'q') {
+        endwin();
+        return 0;
+      }
+      if (key == '\n') {
+        win_del(playagainwin);
+        break;
+      }
     }
   }
 }
@@ -130,6 +145,7 @@ void game_init(void) {
 }
 void game_loop(void) {
   while (!game.is_over) {
+    nodelay(stdscr, true);
     int key_input = getch();
 
     map_clear();

@@ -19,10 +19,13 @@ int win_get_key_nonblock(WINDOW *win) {
 }
 
 void win_draw(WINDOW *win, int startx, int starty, const char *fmt, ...) {
-  va_list ap;
-  va_start(ap, fmt);
-  mvwprintw(win, starty, startx, fmt, ap);
-  va_end(ap);
+  wmove(win, starty, startx);
+
+  va_list args;
+  va_start(args, fmt);
+  vw_printw(win, fmt, args);
+  va_end(args);
+
   wrefresh(win);
 }
 
