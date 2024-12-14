@@ -5,6 +5,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "game.h"
 #include "playagainwin.h"
 #include "startwin.h"
 #include "win.h"
@@ -21,33 +22,12 @@ int main(int argc, char **argv) {
   use_default_colors(); // Allow default terminal colors
   refresh();            // Draw the screen
 
-  WINDOW *startwin = startwin_new();
-  while (true) {
-    int key = win_get_key_block(startwin);
-    if (key == 'q') {
-      endwin();
-      return 0;
-    }
-    if (key == '\n') {
-      win_del(startwin);
-      break;
-    }
+  enum win_cmd cmd = startwin_run();
+  while (cmd != QUIT) {
+    game_run();
+    cmd = playagainwin_run(100);
   }
 
-  while (true) {
-    // main game logic
-
-    WINDOW *playagainwin = playagainwin_new(100);
-    while (true) {
-      int key = win_get_key_block(playagainwin);
-      if (key == 'q') {
-        endwin();
-        return 0;
-      }
-      if (key == '\n') {
-        win_del(playagainwin);
-        break;
-      }
-    }
-  }
+  endwin();
+  return 0;
 }
