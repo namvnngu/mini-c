@@ -20,8 +20,6 @@ SRC := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c)))
 OBJ := $(addprefix $(OBJ_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 OBJ_DEBUG := $(addprefix $(DBG_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 
-CLEAN_LIST := $(BIN_PATH) $(OBJ_PATH) $(DBG_PATH)
-
 .PHONY: prepare build run debug clean
 
 default: prepare build run
@@ -32,7 +30,7 @@ prepare:
 build: $(TARGET)
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
-$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c*
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	$(CC) $(COBJFLAGS) $(INCFLAGS) -o $@ $<
 
 run:
@@ -40,10 +38,9 @@ run:
 
 debug: $(TARGET_DBG)
 $(TARGET_DBG): $(OBJ_DEBUG)
-	$(CC) $(CFLAGS) $(DBGFLAGS) $(LDFLAGS) -o $@ $^
-$(DBG_PATH)/%.o: $(SRC_PATH)/%.c*
-	$(CC) $(COBJFLAGS) $(DBGFLAGS) $(INCFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DBGFLAGS) -o $@ $^
+$(DBG_PATH)/%.o: $(SRC_PATH)/%.c
+	$(CC) $(COBJFLAGS) $(INCFLAGS) $(DBGFLAGS) -o $@ $<
 
 clean:
-	@rm -rf $(CLEAN_LIST)
-	@echo Removed $(CLEAN_LIST)
+	rm -rf $(BIN_PATH) $(OBJ_PATH) $(DBG_PATH)
