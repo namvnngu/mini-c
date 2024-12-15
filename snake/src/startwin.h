@@ -1,9 +1,9 @@
+#ifndef _START_WIN
+#define _START_WIN
+
 #include <ncurses.h>
 
 #include "action.h"
-
-#ifndef _START_WIN
-#define _START_WIN
 
 enum action startwin_run(void);
 

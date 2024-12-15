@@ -1,7 +1,7 @@
-#include <ncurses.h>
-
 #ifndef _WINDOW
 #define _WINDOW
+
+#include <ncurses.h>
 
 WINDOW *win_new(int width, int height, int startx, int starty);
 int win_getkey_block(WINDOW *win);

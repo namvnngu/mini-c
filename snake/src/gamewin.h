@@ -1,7 +1,7 @@
-#include <ncurses.h>
-
 #ifndef _GAME_WIN
 #define _GAME_WIN
+
+#include <ncurses.h>
 
 /*static WINDOW* map*/
 
