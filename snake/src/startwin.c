@@ -1,7 +1,7 @@
 #include <ncurses.h>
 #include <string.h>
 
-#include "flowcmd.h"
+#include "action.h"
 #include "startwin.h"
 #include "win.h"
 
@@ -22,7 +22,7 @@ static WINDOW *startwin_new(void) {
   return win;
 }
 
-enum flowcmd startwin_run(void) {
+enum action startwin_run(void) {
   WINDOW *startwin = startwin_new();
   while (true) {
     int key = win_getkey_block(startwin);

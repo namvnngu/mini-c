@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "flowcmd.h"
+#include "action.h"
 #include "gamewin.h"
 #include "playagainwin.h"
 #include "startwin.h"
@@ -20,10 +20,10 @@ int main(int argc, char **argv) {
   use_default_colors(); // Allow default terminal colors
   refresh();            // Draw the screen
 
-  enum flowcmd cmd = startwin_run();
-  while (cmd != QUIT) {
+  enum action next_action = startwin_run();
+  while (next_action != QUIT) {
     int score = gamewin_run();
-    cmd = playagainwin_run(score);
+    next_action = playagainwin_run(score);
   }
 
   endwin();

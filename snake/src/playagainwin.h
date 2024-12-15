@@ -1,10 +1,10 @@
 #include <ncurses.h>
 
-#include "flowcmd.h"
+#include "action.h"
 
 #ifndef _PLAYAGAIN_WIN
 #define _PLAYAGAIN_WIN
 
-enum flowcmd playagainwin_run(int score);
+enum action playagainwin_run(int score);
 
 #endif /* _PLAYAGAIN_WIN */
