@@ -27,6 +27,7 @@ enum flowcmd startwin_run(void) {
   while (true) {
     int key = win_getkey_block(startwin);
     if (key == 'q') {
+      win_del(startwin);
       return QUIT;
     }
     if (key == '\n') {

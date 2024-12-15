@@ -30,6 +30,7 @@ enum flowcmd playagainwin_run(int score) {
   while (true) {
     int key = win_getkey_block(playagainwin);
     if (key == 'q') {
+      win_del(playagainwin);
       return QUIT;
     }
     if (key == '\n') {

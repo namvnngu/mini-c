@@ -4,7 +4,7 @@
 #include <time.h>
 
 #include "flowcmd.h"
-#include "game.h"
+#include "gamewin.h"
 #include "playagainwin.h"
 #include "startwin.h"
 
@@ -22,8 +22,8 @@ int main(int argc, char **argv) {
 
   enum flowcmd cmd = startwin_run();
   while (cmd != QUIT) {
-    game_run();
-    cmd = playagainwin_run(100);
+    int score = gamewin_run();
+    cmd = playagainwin_run(score);
   }
 
   endwin();
