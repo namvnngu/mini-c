@@ -12,7 +12,7 @@ static const char *DESCRIPTION[2] = {
     "Press Q to quit",
 };
 
-static WINDOW *welcome_initwin(void) {
+static WINDOW *welcome_newwin(void) {
   WINDOW *win = win_new(WIN_WIDTH, WIN_HEIGHT, (COLS - WIN_WIDTH) / 2,
                         (LINES - WIN_HEIGHT) / 2);
   win_draw(win, (WIN_WIDTH - strlen(TITLE)) / 2, 4, TITLE);
@@ -22,7 +22,7 @@ static WINDOW *welcome_initwin(void) {
 }
 
 enum win_action welcome_runwin(void) {
-  WINDOW *startwin = welcome_initwin();
+  WINDOW *startwin = welcome_newwin();
   while (true) {
     int key = win_getkey_block(startwin);
     if (key == 'q') {
