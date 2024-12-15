@@ -2,8 +2,7 @@
 #include <ncurses.h>
 #include <string.h>
 
-#include "action.h"
-#include "playagainwin.h"
+#include "playagain.h"
 #include "win.h"
 
 static const int WIN_WIDTH = 60;
@@ -14,7 +13,7 @@ static const char *DESCRIPTION[2] = {
     "Press Q to quit",
 };
 
-static WINDOW *playagainwin_new(int score) {
+static WINDOW *playagain_initwin(int score) {
   WINDOW *win = win_new(WIN_WIDTH, WIN_HEIGHT, (COLS - WIN_WIDTH) / 2,
                         (LINES - WIN_HEIGHT) / 2);
   int score_strlen = (int)log10(score) + 1;
@@ -25,8 +24,8 @@ static WINDOW *playagainwin_new(int score) {
   return win;
 }
 
-enum action playagainwin_run(int score) {
-  WINDOW *playagainwin = playagainwin_new(100);
+enum win_action playagain_runwin(int score) {
+  WINDOW *playagainwin = playagain_initwin(100);
   while (true) {
     int key = win_getkey_block(playagainwin);
     if (key == 'q') {

@@ -3,6 +3,13 @@
 
 #include <ncurses.h>
 
+enum win_action {
+  CONTINUE,
+  QUIT
+};
+
+const int BORDER_WIDTH = 1;
+
 WINDOW *win_new(int width, int height, int startx, int starty);
 int win_getkey_block(WINDOW *win);
 int win_getkey_nonblock(WINDOW *win);

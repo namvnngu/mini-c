@@ -1,10 +1,11 @@
 #ifndef _MAP
 #define _MAP
 
-#include "vec2.h"
-
 struct map {
-  struct vec2 position;
+  int startx;
+  int starty;
+  int height;
+  int width;
 };
 
 #endif /* _MAP */

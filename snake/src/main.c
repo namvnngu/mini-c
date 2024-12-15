@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "action.h"
-#include "gamewin.h"
-#include "playagainwin.h"
-#include "startwin.h"
+#include "game.h"
+#include "playagain.h"
+#include "welcome.h"
+#include "win.h"
 
 int main(int argc, char **argv) {
   srand(time(NULL));
@@ -20,10 +20,10 @@ int main(int argc, char **argv) {
   use_default_colors(); // Allow default terminal colors
   refresh();            // Draw the screen
 
-  enum action next_action = startwin_run();
+  enum win_action next_action = welcome_runwin();
   while (next_action != QUIT) {
-    int score = gamewin_run();
-    next_action = playagainwin_run(score);
+    int score = game_runwin();
+    next_action = playagain_runwin(score);
   }
 
   endwin();
