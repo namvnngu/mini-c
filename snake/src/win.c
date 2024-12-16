@@ -51,14 +51,17 @@ void win_draw(WINDOW *win, int startx, int starty, const char *fmt, ...) {
   }
   va_end(args);
 
-  result = wrefresh(win);
+}
+
+void win_clear(WINDOW *win) {
+  int result = wclear(win);
   if (result == ERR) {
     _exit();
   }
 }
 
-void win_clear(WINDOW *win) {
-  int result = wclear(win);
+void win_refresh(WINDOW *win) {
+  int result = wrefresh(win);
   if (result == ERR) {
     _exit();
   }

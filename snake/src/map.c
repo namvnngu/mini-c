@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
-#include "map.h"
 #include "win.h"
+#include "map.h"
 
 #define TERMINAL_WIDTH_UNIT 2
 
@@ -26,7 +26,7 @@ struct map *map_new(void) {
   return m;
 }
 
-void map_drawer_point(struct map *m, int x, int y, int color) {
+void map_draw_point(struct map *m, int x, int y, int color) {
   win_enable_color(m->win, color);
   win_draw(m->win, x * TERMINAL_WIDTH_UNIT, y, "  ");
   win_disable_color(m->win, color);

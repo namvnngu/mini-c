@@ -2,8 +2,8 @@
 #include <ncurses.h>
 #include <string.h>
 
-#include "playagain.h"
 #include "win.h"
+#include "playagain.h"
 
 static const int WIN_WIDTH = 60;
 static const int WIN_HEIGHT = 12;
@@ -21,6 +21,7 @@ static WINDOW *_newwin(int score) {
            score);
   win_draw(win, (WIN_WIDTH - strlen(DESCRIPTION[0])) / 2, 6, DESCRIPTION[0]);
   win_draw(win, (WIN_WIDTH - strlen(DESCRIPTION[1])) / 2, 7, DESCRIPTION[1]);
+  win_refresh(win);
   return win;
 }
 

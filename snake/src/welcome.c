@@ -1,8 +1,8 @@
 #include <ncurses.h>
 #include <string.h>
 
-#include "welcome.h"
 #include "win.h"
+#include "welcome.h"
 
 static const int WIN_WIDTH = 60;
 static const int WIN_HEIGHT = 12;
@@ -18,6 +18,7 @@ static WINDOW *_newwin(void) {
   win_draw(win, (WIN_WIDTH - strlen(TITLE)) / 2, 4, TITLE);
   win_draw(win, (WIN_WIDTH - strlen(DESCRIPTION[0])) / 2, 6, DESCRIPTION[0]);
   win_draw(win, (WIN_WIDTH - strlen(DESCRIPTION[1])) / 2, 7, DESCRIPTION[1]);
+  win_refresh(win);
   return win;
 }
 
