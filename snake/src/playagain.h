@@ -1,11 +1,19 @@
-#ifndef _PLAYAGAIN_WIN
-#define _PLAYAGAIN_WIN
+#ifndef _PLAYAGAIN
+#define _PLAYAGAIN
 
 #include <ncurses.h>
 
-WINDOW *playagain_new(void);
-void playagain_draw(WINDOW *win, int score);
-int playagain_input(void);
-void playagain_delete(WINDOW *win);
+struct playagain {
+  WINDOW *win;
+  int width;
+  int height;
+  int startx;
+  int starty;
+};
 
-#endif /* _PLAYAGAIN_WIN */
+struct playagain *playagain_new(void);
+void playagain_draw(struct playagain *pa, int score);
+int playagain_input(void);
+void playagain_delete(struct playagain *pa);
+
+#endif /* _PLAYAGAIN */

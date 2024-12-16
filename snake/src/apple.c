@@ -23,6 +23,10 @@ struct apple *apple_new(struct map *m, struct snake *s) {
   return ap;
 }
 
+void apple_draw(struct apple *ap, struct map *m) {
+  m->draw_point(m, ap->x, ap->y, ap->color);
+}
+
 void apple_set_new_position(struct apple *ap, struct map *m, struct snake *s) {
   bool found = false;
   while (!found) {

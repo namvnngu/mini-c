@@ -24,6 +24,14 @@ struct snake *snake_new(struct map *m) {
   return s;
 }
 
+void snake_draw(struct snake *s, struct map *m) {
+  for (int i = 0; i < s->length; i++) {
+    if (s->body[i].x != 0 && s->body[i].y != 0) {
+      m->draw_point(m, s->body[i].x, s->body[i].y, s->color);
+    }
+  }
+}
+
 void snake_update_keyinput(struct snake *s, int key_input) {
   for (int i = s->length - 1; i > 0; i--) {
     s->body[i] = s->body[i - 1];

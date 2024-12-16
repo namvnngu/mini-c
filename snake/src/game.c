@@ -18,11 +18,6 @@ int game_run(void) {
   bool is_over = false;
 
   while (!is_over) {
-    // clear
-    wclear(m->win);
-    wclear(sb->win);
-
-    // update
     int key = input_getkey_nonblock();
 
     snake_update_keyinput(s, key);
@@ -36,20 +31,15 @@ int game_run(void) {
       scoreboard_set_score(sb, s);
     }
 
-    // draw
-    box(m->win, 0, 0);
-    map_draw_point(m, ap->x, ap->y, ap->color);
-    for (int i = 0; i < s->length; i++) {
-      if (s->body[i].x != 0 && s->body[i].y != 0) {
-        map_draw_point(m, s->body[i].x, s->body[i].y, s->color);
-      }
-    }
-    wrefresh(m->win);
-
+    apple_draw(ap, m);
+    snake_draw(s, m);
+    map_draw(m);
     scoreboard_draw(sb);
 
-    // delay
     usleep(75000);
+
+    map_clear(m);
+    scoreboard_clear(sb);
   }
 
   score = sb->score;

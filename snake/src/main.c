@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
 
   int key;
 
-  WINDOW *wc = welcome_new();
+  struct welcome *wc = welcome_new();
   welcome_draw(wc);
   key = welcome_input();
   welcome_delete(wc);
@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
   while (key != QUIT) {
     int score = game_run();
 
-    WINDOW *pa = playagain_new();
+    struct playagain *pa = playagain_new();
     playagain_draw(pa, score);
     key = playagain_input();
     playagain_delete(pa);

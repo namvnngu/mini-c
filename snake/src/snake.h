@@ -23,6 +23,7 @@ struct snake {
 };
 
 struct snake *snake_new(struct map *m);
+void snake_draw(struct snake *s, struct map *m);
 void snake_update_keyinput(struct snake *s, int key_input);
 void snake_update_after_hit_apple(struct snake *s);
 bool snake_hit_itself(struct snake *s);

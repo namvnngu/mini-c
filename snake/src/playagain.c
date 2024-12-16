@@ -1,31 +1,39 @@
 #include <math.h>
 #include <ncurses.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "input.h"
 #include "playagain.h"
 
-static const int WIN_WIDTH = 60;
-static const int WIN_HEIGHT = 12;
-static const char *TITLE = "YOUR SCORE IS %d";
+static const char *TITLE = "Your score is %d";
 static const char *DESCRIPTION[2] = {
     "Press Enter to play again",
     "Press Q to quit",
 };
 
-WINDOW *playagain_new(void) {
-  return newwin(WIN_HEIGHT, WIN_WIDTH, (LINES - WIN_HEIGHT) / 2,
-                (COLS - WIN_WIDTH) / 2);
+struct playagain *playagain_new(void) {
+  struct playagain *pa = malloc(sizeof(struct playagain));
+
+  pa->width = 60;
+  pa->height = 12;
+  pa->startx = (COLS - pa->width) / 2;
+  pa->starty = (LINES - pa->height) / 2;
+  pa->win = newwin(pa->height, pa->width, pa->starty, pa->startx);
+
+  return pa;
 }
 
-void playagain_draw(WINDOW *win, int score) {
+void playagain_draw(struct playagain *pa, int score) {
   int score_strlen = (int)log10(score) + 1;
-  mvwprintw(win, 4, (WIN_WIDTH - strlen(TITLE) - score_strlen) / 2, TITLE,
+  mvwprintw(pa->win, 4, (pa->width - strlen(TITLE) - score_strlen) / 2, TITLE,
             score);
-  mvwprintw(win, 6, (WIN_WIDTH - strlen(DESCRIPTION[0])) / 2, DESCRIPTION[0]);
-  mvwprintw(win, 7, (WIN_WIDTH - strlen(DESCRIPTION[1])) / 2, DESCRIPTION[1]);
-  box(win, 0, 0);
-  wrefresh(win);
+  mvwprintw(pa->win, 6, (pa->width - strlen(DESCRIPTION[0])) / 2,
+            DESCRIPTION[0]);
+  mvwprintw(pa->win, 7, (pa->width - strlen(DESCRIPTION[1])) / 2,
+            DESCRIPTION[1]);
+  box(pa->win, 0, 0);
+  wrefresh(pa->win);
 }
 
 int playagain_input(void) {
@@ -37,8 +45,9 @@ int playagain_input(void) {
   }
 }
 
-void playagain_delete(WINDOW *win) {
-  wclear(win);
-  wrefresh(win);
-  delwin(win);
+void playagain_delete(struct playagain *pa) {
+  wclear(pa->win);
+  wrefresh(pa->win);
+  delwin(pa->win);
+  free(pa);
 }

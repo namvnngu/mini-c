@@ -10,6 +10,7 @@ struct apple {
 };
 
 struct apple *apple_new(struct map *m, struct snake *s);
+void apple_draw(struct apple *ap, struct map *m);
 void apple_set_new_position(struct apple *ap, struct map *m, struct snake *s);
 void apple_delete(struct apple *ap);
 

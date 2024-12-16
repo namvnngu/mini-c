@@ -8,6 +8,12 @@
 // Source: https://stackoverflow.com/a/60046028
 #define TERMINAL_WIDTH_UNIT 2
 
+static void _draw_point(struct map *m, int x, int y, int color) {
+  wattron(m->win, COLOR_PAIR(color));
+  mvwprintw(m->win, y, x * TERMINAL_WIDTH_UNIT, "  ");
+  wattroff(m->win, COLOR_PAIR(color));
+}
+
 struct map *map_new(void) {
   struct map *m = malloc(sizeof(struct map));
   if (m == NULL) {
@@ -22,14 +28,14 @@ struct map *map_new(void) {
   m->win =
       newwin(m->height, m->width * TERMINAL_WIDTH_UNIT, m->starty, m->startx);
   m->border_size = 1;
+  m->draw_point = _draw_point;
 
   return m;
 }
 
-void map_draw_point(struct map *m, int x, int y, int color) {
-  wattron(m->win, COLOR_PAIR(color));
-  mvwprintw(m->win, y, x * TERMINAL_WIDTH_UNIT, "  ");
-  wattroff(m->win, COLOR_PAIR(color));
+void map_draw(struct map *m) {
+  box(m->win, 0, 0);
+  wrefresh(m->win);
 }
 
 void map_clear(struct map *m) {

@@ -11,7 +11,7 @@ static const char *TITLE = "Score";
 struct scoreboard *scoreboard_new(struct map *m, struct snake *s) {
   struct scoreboard *sb = malloc(sizeof(struct scoreboard));
 
-  sb->width = 12;
+  sb->width = 11;
   sb->height = 5;
   sb->startx = m->startx - sb->width - 2; // 2 is gap between scoreboard and map
   sb->starty = m->starty;
@@ -26,12 +26,16 @@ void scoreboard_set_score(struct scoreboard *sb, struct snake *s) {
 }
 
 void scoreboard_draw(struct scoreboard *sb) {
+  box(sb->win, 0, 0);
   mvwprintw(sb->win, 0, (sb->width - strlen(TITLE)) / 2, TITLE);
   int score_strlen = (int)log10(sb->score) + 1;
   mvwprintw(sb->win, (sb->height - 1) / 2, (sb->width - score_strlen) / 2, "%d",
             sb->score);
-  box(sb->win, 0, 0);
   wrefresh(sb->win);
+}
+
+void scoreboard_clear(struct scoreboard *sb) {
+  wclear(sb->win);
 }
 
 void scoreboard_delete(struct scoreboard *sb) {
