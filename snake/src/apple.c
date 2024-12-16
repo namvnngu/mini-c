@@ -9,29 +9,29 @@ static int _random_range(int min, int max) {
 }
 
 struct apple *apple_new(struct map *m, struct snake *s) {
-  struct apple *a = malloc(sizeof(struct apple));
-  if (a == NULL) {
+  struct apple *ap = malloc(sizeof(struct apple));
+  if (ap == NULL) {
     fprintf(stderr, "Out of memory.");
     exit(1);
   }
 
-  a->width = 1;
-  a->height = 1;
-  a->color = 2;
-  apple_set_new_position(a, m, s);
+  ap->width = 1;
+  ap->height = 1;
+  ap->color = 2;
+  apple_set_new_position(ap, m, s);
 
-  return a;
+  return ap;
 }
 
-void apple_set_new_position(struct apple *a, struct map *m, struct snake *s) {
+void apple_set_new_position(struct apple *ap, struct map *m, struct snake *s) {
   bool found = false;
   while (!found) {
-    a->x = _random_range(1, m->width - m->border_size - a->width);
-    a->y = _random_range(1, m->height - m->border_size - a->height);
+    ap->x = _random_range(1, m->width - m->border_size - ap->width);
+    ap->y = _random_range(1, m->height - m->border_size - ap->height);
 
     bool is_within_snake_body = false;
     for (int i = 0; i < s->length; i++) {
-      if (s->body[i]->x == a->x && s->body[i]->y == a->y) {
+      if (s->body[i].x == ap->x && s->body[i].y == ap->y) {
         is_within_snake_body = true;
       }
     }
@@ -43,10 +43,6 @@ void apple_set_new_position(struct apple *a, struct map *m, struct snake *s) {
   }
 }
 
-void apple_draw(struct apple *a, struct map *m) {
-  map_draw_point(m, a->x, a->y, a->color);
-}
-
-void apple_delete(struct apple *a) {
-  free(a);
+void apple_delete(struct apple *ap) {
+  free(ap);
 }

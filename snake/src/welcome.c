@@ -1,7 +1,7 @@
 #include <ncurses.h>
 #include <string.h>
 
-#include "win.h"
+#include "input.h"
 #include "welcome.h"
 
 static const int WIN_WIDTH = 60;
@@ -12,27 +12,30 @@ static const char *DESCRIPTION[2] = {
     "Press Q to quit",
 };
 
-static WINDOW *_newwin(void) {
-  WINDOW *win = win_new(WIN_WIDTH, WIN_HEIGHT, (COLS - WIN_WIDTH) / 2,
-                        (LINES - WIN_HEIGHT) / 2);
-  win_draw(win, (WIN_WIDTH - strlen(TITLE)) / 2, 4, TITLE);
-  win_draw(win, (WIN_WIDTH - strlen(DESCRIPTION[0])) / 2, 6, DESCRIPTION[0]);
-  win_draw(win, (WIN_WIDTH - strlen(DESCRIPTION[1])) / 2, 7, DESCRIPTION[1]);
-  win_refresh(win);
-  return win;
+WINDOW *welcome_new(void) {
+  return newwin(WIN_HEIGHT, WIN_WIDTH, (LINES - WIN_HEIGHT) / 2,
+                (COLS - WIN_WIDTH) / 2);
 }
 
-enum win_action welcome_runwin(void) {
-  WINDOW *win = _newwin();
+void welcome_draw(WINDOW *win) {
+  mvwprintw(win, 4, (WIN_WIDTH - strlen(TITLE)) / 2, TITLE);
+  mvwprintw(win, 6, (WIN_WIDTH - strlen(DESCRIPTION[0])) / 2, DESCRIPTION[0]);
+  mvwprintw(win, 7, (WIN_WIDTH - strlen(DESCRIPTION[1])) / 2, DESCRIPTION[1]);
+  box(win, 0, 0);
+  wrefresh(win);
+}
+
+int welcome_input(void) {
   while (true) {
-    int key = win_getkey_block(win);
-    if (key == 'q') {
-      win_delete(win);
-      return QUIT;
-    }
-    if (key == '\n') {
-      win_delete(win);
-      return CONTINUE;
+    int key = input_getkey_block();
+    if (key == QUIT || key == CONTINUE) {
+      return key;
     }
   }
+}
+
+void welcome_delete(WINDOW *win) {
+  wclear(win);
+  wrefresh(win);
+  delwin(win);
 }

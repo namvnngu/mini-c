@@ -2,48 +2,62 @@
 #include <unistd.h>
 
 #include "map.h"
-#include "win.h"
 #include "snake.h"
 #include "apple.h"
 #include "scoreboard.h"
 #include "game.h"
+#include "input.h"
 
-int game_runwin(void) {
-  struct map *map = map_new();
-  struct snake *snake = snake_new(map);
-  struct apple *apple = apple_new(map, snake);
-  struct scoreboard *scoreboard = scoreboard_new(map, snake);
+int game_run(void) {
+  struct map *m = map_new();
+  struct snake *s = snake_new(m);
+  struct apple *ap = apple_new(m, s);
+  struct scoreboard *sb = scoreboard_new(m, s);
+
+  int score = 0;
   bool is_over = false;
 
   while (!is_over) {
-    int key = win_getkey_nonblock(map->win);
+    // clear
+    wclear(m->win);
+    wclear(sb->win);
 
-    win_clear(map->win);
-    win_clear(scoreboard->win);
+    // update
+    int key = input_getkey_nonblock();
 
-    snake_update(snake, key);
-    if (snake_hit_map_wall(snake, map) || snake_hit_itself(snake)) {
+    snake_update_keyinput(s, key);
+    if (snake_hit_map_wall(s, m) || snake_hit_itself(s)) {
       is_over = true;
       continue;
     }
-    if (snake_hit_apple(snake, apple->x, apple->y)) {
-      apple_set_new_position(apple, map, snake);
-      scoreboard_update_score(scoreboard, snake);
+    if (snake_hit_apple(s, ap->x, ap->y)) {
+      snake_update_after_hit_apple(s);
+      apple_set_new_position(ap, m, s);
+      scoreboard_set_score(sb, s);
     }
 
-    snake_draw(snake, map);
-    apple_draw(apple, map);
+    // draw
+    box(m->win, 0, 0);
+    map_draw_point(m, ap->x, ap->y, ap->color);
+    for (int i = 0; i < s->length; i++) {
+      if (s->body[i].x != 0 && s->body[i].y != 0) {
+        map_draw_point(m, s->body[i].x, s->body[i].y, s->color);
+      }
+    }
+    wrefresh(m->win);
 
-    win_refresh(map->win);
-    win_refresh(scoreboard->win);
+    scoreboard_draw(sb);
 
+    // delay
     usleep(75000);
   }
 
-  scoreboard_delete(scoreboard);
-  apple_delete(apple);
-  snake_delete(snake);
-  map_delete(map);
+  score = sb->score;
 
-  return 100;
+  scoreboard_delete(sb);
+  apple_delete(ap);
+  snake_delete(s);
+  map_delete(m);
+
+  return score;
 }

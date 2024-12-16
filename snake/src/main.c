@@ -4,9 +4,9 @@
 #include <time.h>
 
 #include "game.h"
+#include "input.h"
 #include "playagain.h"
 #include "welcome.h"
-#include "win.h"
 
 int main(int argc, char **argv) {
   srand(time(NULL));
@@ -22,10 +22,20 @@ int main(int argc, char **argv) {
   init_pair(1, -1, COLOR_BLUE);
   init_pair(2, -1, COLOR_RED);
 
-  enum win_action next_action = welcome_runwin();
-  while (next_action != QUIT) {
-    int score = game_runwin();
-    next_action = playagain_runwin(score);
+  int key;
+
+  WINDOW *wc = welcome_new();
+  welcome_draw(wc);
+  key = welcome_input();
+  welcome_delete(wc);
+
+  while (key != QUIT) {
+    int score = game_run();
+
+    WINDOW *pa = playagain_new();
+    playagain_draw(pa, score);
+    key = playagain_input();
+    playagain_delete(pa);
   }
 
   endwin();

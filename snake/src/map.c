@@ -1,8 +1,11 @@
+#include <ncurses.h>
 #include <stdlib.h>
 
-#include "win.h"
 #include "map.h"
 
+// The width of two characters horizontally is much closer to the height of
+// one character vertically than the width of one character.
+// Source: https://stackoverflow.com/a/60046028
 #define TERMINAL_WIDTH_UNIT 2
 
 struct map *map_new(void) {
@@ -17,19 +20,25 @@ struct map *map_new(void) {
   m->startx = (COLS - m->width * TERMINAL_WIDTH_UNIT) / 2;
   m->starty = (LINES - m->height) / 2;
   m->win =
-      win_new(m->width * TERMINAL_WIDTH_UNIT, m->height, m->startx, m->starty);
-  m->border_size = BORDER_WIDTH;
+      newwin(m->height, m->width * TERMINAL_WIDTH_UNIT, m->starty, m->startx);
+  m->border_size = 1;
 
   return m;
 }
 
 void map_draw_point(struct map *m, int x, int y, int color) {
-  win_enable_color(m->win, color);
-  win_draw(m->win, x * TERMINAL_WIDTH_UNIT, y, "  ");
-  win_disable_color(m->win, color);
+  wattron(m->win, COLOR_PAIR(color));
+  mvwprintw(m->win, y, x * TERMINAL_WIDTH_UNIT, "  ");
+  wattroff(m->win, COLOR_PAIR(color));
+}
+
+void map_clear(struct map *m) {
+  wclear(m->win);
 }
 
 void map_delete(struct map *m) {
-  win_delete(m->win);
+  wclear(m->win);
+  wrefresh(m->win);
+  delwin(m->win);
   free(m);
 }

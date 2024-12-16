@@ -2,7 +2,7 @@
 #include <ncurses.h>
 #include <string.h>
 
-#include "win.h"
+#include "input.h"
 #include "playagain.h"
 
 static const int WIN_WIDTH = 60;
@@ -13,29 +13,32 @@ static const char *DESCRIPTION[2] = {
     "Press Q to quit",
 };
 
-static WINDOW *_newwin(int score) {
-  WINDOW *win = win_new(WIN_WIDTH, WIN_HEIGHT, (COLS - WIN_WIDTH) / 2,
-                        (LINES - WIN_HEIGHT) / 2);
-  int score_strlen = (int)log10(score) + 1;
-  win_draw(win, (WIN_WIDTH - strlen(TITLE) - score_strlen) / 2, 4, TITLE,
-           score);
-  win_draw(win, (WIN_WIDTH - strlen(DESCRIPTION[0])) / 2, 6, DESCRIPTION[0]);
-  win_draw(win, (WIN_WIDTH - strlen(DESCRIPTION[1])) / 2, 7, DESCRIPTION[1]);
-  win_refresh(win);
-  return win;
+WINDOW *playagain_new(void) {
+  return newwin(WIN_HEIGHT, WIN_WIDTH, (LINES - WIN_HEIGHT) / 2,
+                (COLS - WIN_WIDTH) / 2);
 }
 
-enum win_action playagain_runwin(int score) {
-  WINDOW *win = _newwin(100);
+void playagain_draw(WINDOW *win, int score) {
+  int score_strlen = (int)log10(score) + 1;
+  mvwprintw(win, 4, (WIN_WIDTH - strlen(TITLE) - score_strlen) / 2, TITLE,
+            score);
+  mvwprintw(win, 6, (WIN_WIDTH - strlen(DESCRIPTION[0])) / 2, DESCRIPTION[0]);
+  mvwprintw(win, 7, (WIN_WIDTH - strlen(DESCRIPTION[1])) / 2, DESCRIPTION[1]);
+  box(win, 0, 0);
+  wrefresh(win);
+}
+
+int playagain_input(void) {
   while (true) {
-    int key = win_getkey_block(win);
-    if (key == 'q') {
-      win_delete(win);
-      return QUIT;
-    }
-    if (key == '\n') {
-      win_delete(win);
-      return CONTINUE;
+    int key = input_getkey_block();
+    if (key == QUIT || key == CONTINUE) {
+      return key;
     }
   }
+}
+
+void playagain_delete(WINDOW *win) {
+  wclear(win);
+  wrefresh(win);
+  delwin(win);
 }

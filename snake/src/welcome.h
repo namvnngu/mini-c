@@ -1,8 +1,11 @@
 #ifndef _START_WIN
 #define _START_WIN
 
-#include "win.h"
+#include <ncurses.h>
 
-enum win_action welcome_runwin(void);
+WINDOW *welcome_new(void);
+void welcome_draw(WINDOW *win);
+int welcome_input(void);
+void welcome_delete(WINDOW *win);
 
 #endif /* _START_WIN */
