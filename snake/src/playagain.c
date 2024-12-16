@@ -13,7 +13,7 @@ static const char *DESCRIPTION[2] = {
     "Press Q to quit",
 };
 
-static WINDOW *playagain_newwin(int score) {
+static WINDOW *_newwin(int score) {
   WINDOW *win = win_new(WIN_WIDTH, WIN_HEIGHT, (COLS - WIN_WIDTH) / 2,
                         (LINES - WIN_HEIGHT) / 2);
   int score_strlen = (int)log10(score) + 1;
@@ -25,15 +25,15 @@ static WINDOW *playagain_newwin(int score) {
 }
 
 enum win_action playagain_runwin(int score) {
-  WINDOW *playagainwin = playagain_newwin(100);
+  WINDOW *win = _newwin(100);
   while (true) {
-    int key = win_getkey_block(playagainwin);
+    int key = win_getkey_block(win);
     if (key == 'q') {
-      win_del(playagainwin);
+      win_delete(win);
       return QUIT;
     }
     if (key == '\n') {
-      win_del(playagainwin);
+      win_delete(win);
       return CONTINUE;
     }
   }
