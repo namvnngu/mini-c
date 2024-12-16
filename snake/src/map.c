@@ -5,15 +5,11 @@
 
 #define TERMINAL_WIDTH_UNIT 2
 
-static void _exit(void) {
-  fprintf(stderr, "Out of memory.");
-  exit(1);
-}
-
 struct map *map_new(void) {
   struct map *m = malloc(sizeof(struct map));
   if (m == NULL) {
-    _exit();
+    fprintf(stderr, "Out of memory.");
+    exit(1);
   }
 
   m->width = 25;
@@ -22,6 +18,7 @@ struct map *map_new(void) {
   m->starty = (LINES - m->height) / 2;
   m->win =
       win_new(m->width * TERMINAL_WIDTH_UNIT, m->height, m->startx, m->starty);
+  m->border_size = BORDER_WIDTH;
 
   return m;
 }

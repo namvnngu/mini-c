@@ -8,8 +8,8 @@ struct scoreboard {
   int score;
 };
 
-struct scoreboard *scoreboard_new(struct map *m, int snake_length);
-void scoreboard_update_score(struct scoreboard *s, int snake_length);
-void scoreboard_delete(struct scoreboard *s);
+struct scoreboard *scoreboard_new(struct map *m, struct snake *s);
+void scoreboard_update_score(struct scoreboard *sb, struct snake *s);
+void scoreboard_delete(struct scoreboard *sb);
 
 #endif /* _SCOREBOARD */

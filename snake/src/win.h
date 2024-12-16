@@ -3,7 +3,7 @@
 
 #include <ncurses.h>
 
-#define BORDER_WIDTH 1;
+#define BORDER_WIDTH 1
 
 enum win_action {
   CONTINUE,

@@ -11,8 +11,8 @@
 int game_runwin(void) {
   struct map *map = map_new();
   struct snake *snake = snake_new(map);
-  struct apple *apple = apple_new();
-  struct scoreboard *scoreboard = scoreboard_new(map, snake->length);
+  struct apple *apple = apple_new(map, snake);
+  struct scoreboard *scoreboard = scoreboard_new(map, snake);
   bool is_over = false;
 
   while (!is_over) {
@@ -27,8 +27,8 @@ int game_runwin(void) {
       continue;
     }
     if (snake_hit_apple(snake, apple->x, apple->y)) {
-      apple_set_new_position(apple, map, snake->body);
-      scoreboard_update_score(scoreboard, snake->length);
+      apple_set_new_position(apple, map, snake);
+      scoreboard_update_score(scoreboard, snake);
     }
 
     snake_draw(snake, map);

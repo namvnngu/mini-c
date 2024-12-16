@@ -19,6 +19,8 @@ int main(int argc, char **argv) {
   start_color();        // Enable colors (create colors and color pairs)
   use_default_colors(); // Allow default terminal colors
   refresh();            // Draw the screen
+  init_pair(1, -1, COLOR_BLUE);
+  init_pair(2, -1, COLOR_RED);
 
   enum win_action next_action = welcome_runwin();
   while (next_action != QUIT) {

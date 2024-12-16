@@ -9,6 +9,7 @@ struct map {
   int width;
   int startx;
   int starty;
+  int border_size;
 };
 
 struct map *map_new(void);
