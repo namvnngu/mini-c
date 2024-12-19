@@ -5,4 +5,4 @@ The projects are listed in ascending chronological order:
 3. [Singly Linked List](https://github.com/namvnngu/mini-c/tree/main/singly_linked_list)
 4. [Snake](https://github.com/namvnngu/mini-c/tree/main/snake)
 
-code is licensed under MIT.
+code is licensed under [MIT](./LICENSE).
