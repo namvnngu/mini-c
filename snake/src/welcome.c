@@ -7,8 +7,8 @@
 
 static const char *TITLE = "SNAKE";
 static const char *DESCRIPTION[2] = {
-    "Press Enter to play",
-    "Press Q to quit",
+    "Press enter to play",
+    "Press q to quit",
 };
 
 struct welcome *welcome_new(void) {
@@ -24,12 +24,16 @@ struct welcome *welcome_new(void) {
 }
 
 void welcome_draw(struct welcome *wc) {
-  mvwprintw(wc->win, 4, (wc->width - strlen(TITLE)) / 2, TITLE);
-  mvwprintw(wc->win, 6, (wc->width - strlen(DESCRIPTION[0])) / 2,
-            DESCRIPTION[0]);
-  mvwprintw(wc->win, 7, (wc->width - strlen(DESCRIPTION[1])) / 2,
-            DESCRIPTION[1]);
   box(wc->win, 0, 0);
+
+  mvwprintw(wc->win, 4, (wc->width - strlen(TITLE)) / 2, TITLE);
+
+  int desc_len = (sizeof(DESCRIPTION) / sizeof(DESCRIPTION[0]));
+  for (int i = 0; i < desc_len; i++) {
+    mvwprintw(wc->win, 6 + i, (wc->width - strlen(DESCRIPTION[i])) / 2,
+              DESCRIPTION[i]);
+  }
+
   wrefresh(wc->win);
 }
 

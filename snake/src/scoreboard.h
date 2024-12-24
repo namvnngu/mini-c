@@ -3,6 +3,9 @@
 
 #include <ncurses.h>
 
+#include "map.h"
+#include "snake.h"
+
 struct scoreboard {
   WINDOW *win;
   int width;

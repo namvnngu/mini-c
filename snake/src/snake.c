@@ -38,24 +38,28 @@ void snake_update_keyinput(struct snake *s, int key_input) {
   }
 
   switch (key_input) {
+    case 'w':
     case KEY_UP: {
       if (s->direction != SOUTH) {
         s->direction = NORTH;
       }
       break;
     }
+    case 's':
     case KEY_DOWN: {
       if (s->direction != NORTH) {
         s->direction = SOUTH;
       }
       break;
     }
+    case 'd':
     case KEY_RIGHT: {
       if (s->direction != WEST) {
         s->direction = EAST;
       }
       break;
     }
+    case 'a':
     case KEY_LEFT: {
       if (s->direction != EAST) {
         s->direction = WEST;

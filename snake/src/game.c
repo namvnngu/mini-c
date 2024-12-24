@@ -6,6 +6,7 @@
 #include "apple.h"
 #include "scoreboard.h"
 #include "game.h"
+#include "help.h"
 #include "input.h"
 
 int game_run(void) {
@@ -13,12 +14,19 @@ int game_run(void) {
   struct snake *s = snake_new(m);
   struct apple *ap = apple_new(m, s);
   struct scoreboard *sb = scoreboard_new(m, s);
+  struct help *h = help_new(m, sb);
 
   int score = 0;
   bool is_over = false;
 
+  help_draw(h);
+
   while (!is_over) {
     int key = input_getkey_nonblock();
+    if (key == 'q') {
+      is_over = true;
+      continue;
+    }
 
     snake_update_keyinput(s, key);
     if (snake_hit_map_wall(s, m) || snake_hit_itself(s)) {
@@ -45,6 +53,7 @@ int game_run(void) {
   score = sb->score;
 
   scoreboard_delete(sb);
+  help_delete(h);
   apple_delete(ap);
   snake_delete(s);
   map_delete(m);

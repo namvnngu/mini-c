@@ -1,6 +1,9 @@
 #ifndef _APPLE
 #define _APPLE
 
+#include "map.h"
+#include "snake.h"
+
 struct apple {
   int width;
   int height;

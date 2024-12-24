@@ -8,7 +8,7 @@
 #include "playagain.h"
 #include "welcome.h"
 
-int main(int argc, char **argv) {
+int main(int argc, char *argv[]) {
   srand(time(NULL));
 
   initscr();            // Initialize the screen

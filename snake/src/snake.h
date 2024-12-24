@@ -1,6 +1,8 @@
 #ifndef _SNAKE
 #define _SNAKE
 
+#include "map.h"
+
 struct snake_body {
   int width;
   int height;
