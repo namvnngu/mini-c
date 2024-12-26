@@ -22,20 +22,10 @@ int main(int argc, char *argv[]) {
   init_pair(1, -1, COLOR_BLUE);
   init_pair(2, -1, COLOR_RED);
 
-  int key;
-
-  struct welcome *wc = welcome_new();
-  welcome_draw(wc);
-  key = welcome_input();
-  welcome_delete(wc);
-
+  int key = welcome_run();
   while (key != QUIT) {
     int score = game_run();
-
-    struct playagain *pa = playagain_new();
-    playagain_draw(pa, score);
-    key = playagain_input();
-    playagain_delete(pa);
+    key = playagain_run(score);
   }
 
   endwin();

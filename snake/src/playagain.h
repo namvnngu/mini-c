@@ -11,9 +11,6 @@ struct playagain {
   int starty;
 };
 
-struct playagain *playagain_new(void);
-void playagain_draw(struct playagain *pa, int score);
-int playagain_input(void);
-void playagain_delete(struct playagain *pa);
+int playagain_run(int score);
 
 #endif /* _PLAYAGAIN */

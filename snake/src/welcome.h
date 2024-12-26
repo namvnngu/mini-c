@@ -11,9 +11,6 @@ struct welcome {
   int starty;
 };
 
-struct welcome *welcome_new(void);
-void welcome_draw(struct welcome *wc);
-int welcome_input(void);
-void welcome_delete(struct welcome *wc);
+int welcome_run(void);
 
 #endif /* _WELCOME */

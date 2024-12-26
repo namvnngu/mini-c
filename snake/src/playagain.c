@@ -12,7 +12,7 @@ static const char *DESCRIPTION[2] = {
     "Press q to quit",
 };
 
-struct playagain *playagain_new(void) {
+static struct playagain *_playagain_new(void) {
   struct playagain *pa = malloc(sizeof(struct playagain));
 
   pa->width = 60;
@@ -24,7 +24,7 @@ struct playagain *playagain_new(void) {
   return pa;
 }
 
-void playagain_draw(struct playagain *pa, int score) {
+static void _playagain_draw(struct playagain *pa, int score) {
   box(pa->win, 0, 0);
 
   int score_strlen = (int)log10(score) + 1;
@@ -40,7 +40,7 @@ void playagain_draw(struct playagain *pa, int score) {
   wrefresh(pa->win);
 }
 
-int playagain_input(void) {
+static int _playagain_input(void) {
   while (true) {
     int key = input_getkey_block();
     if (key == QUIT || key == CONTINUE) {
@@ -49,9 +49,17 @@ int playagain_input(void) {
   }
 }
 
-void playagain_delete(struct playagain *pa) {
+static void _playagain_delete(struct playagain *pa) {
   wclear(pa->win);
   wrefresh(pa->win);
   delwin(pa->win);
   free(pa);
+}
+
+int playagain_run(int score) {
+  struct playagain *pa = _playagain_new();
+  _playagain_draw(pa, score);
+  int key = _playagain_input();
+  _playagain_delete(pa);
+  return key;
 }
