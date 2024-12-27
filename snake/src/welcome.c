@@ -11,7 +11,7 @@ static const char *DESCRIPTION[2] = {
     "Press q to quit",
 };
 
-static struct welcome *_welcome_new(void) {
+static struct welcome *_new(void) {
   struct welcome *wc = malloc(sizeof(struct welcome));
 
   wc->width = 60;
@@ -23,7 +23,7 @@ static struct welcome *_welcome_new(void) {
   return wc;
 }
 
-static void _welcome_draw(struct welcome *wc) {
+static void _draw(struct welcome *wc) {
   box(wc->win, 0, 0);
 
   mvwprintw(wc->win, 4, (wc->width - strlen(TITLE)) / 2, TITLE);
@@ -37,7 +37,7 @@ static void _welcome_draw(struct welcome *wc) {
   wrefresh(wc->win);
 }
 
-static int _welcome_input(void) {
+static int _input(void) {
   while (true) {
     int key = input_getkey_block();
     if (key == QUIT || key == CONTINUE) {
@@ -46,7 +46,7 @@ static int _welcome_input(void) {
   }
 }
 
-static void _welcome_delete(struct welcome *wc) {
+static void _delete(struct welcome *wc) {
   wclear(wc->win);
   wrefresh(wc->win);
   delwin(wc->win);
@@ -54,9 +54,9 @@ static void _welcome_delete(struct welcome *wc) {
 }
 
 int welcome_run(void) {
-  struct welcome *wc = _welcome_new();
-  _welcome_draw(wc);
-  int key = _welcome_input();
-  _welcome_delete(wc);
+  struct welcome *wc = _new();
+  _draw(wc);
+  int key = _input();
+  _delete(wc);
   return key;
 }
