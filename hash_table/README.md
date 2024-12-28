@@ -1,6 +1,4 @@
-The hash table is
-- open-addressed
-- double-hashed
+The hash table is open-addressed and double-hashed.
 
-References
+References:
 - [Write a hash table in C](https://github.com/jamesroutley/write-a-hash-table)

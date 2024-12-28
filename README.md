@@ -1,3 +1,5 @@
+# mini-c
+
 The projects are listed in ascending chronological order:
 
 1. [Hello World](./hello_world)
