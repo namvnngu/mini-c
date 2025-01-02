@@ -29,5 +29,6 @@ int main(int argc, char *argv[]) {
   }
 
   endwin();
+
   return 0;
 }
