@@ -6,13 +6,13 @@
 #include "input.h"
 #include "playagain.h"
 
-static const char *PRV_TITLE = "Your score is %d";
-static const char *PRV_DESCRIPTION[2] = {
+static const char *s_TITLE = "Your score is %d";
+static const char *s_DESCRIPTION[2] = {
     "Press enter to play again",
     "Press q to quit",
 };
 
-static struct playagain *prv_new(void) {
+static struct playagain *s_new(void) {
   struct playagain *pa = malloc(sizeof(struct playagain));
 
   pa->width = 60;
@@ -24,23 +24,23 @@ static struct playagain *prv_new(void) {
   return pa;
 }
 
-static void prv_draw(struct playagain *pa, int score) {
+static void s_draw(struct playagain *pa, int score) {
   box(pa->win, 0, 0);
 
   int score_strlen = (int)log10(score) + 1;
-  mvwprintw(pa->win, 4, (pa->width - strlen(PRV_TITLE) - score_strlen) / 2,
-            PRV_TITLE, score);
+  mvwprintw(pa->win, 4, (pa->width - strlen(s_TITLE) - score_strlen) / 2,
+            s_TITLE, score);
 
-  int desc_len = (sizeof(PRV_DESCRIPTION) / sizeof(PRV_DESCRIPTION[0]));
+  int desc_len = (sizeof(s_DESCRIPTION) / sizeof(s_DESCRIPTION[0]));
   for (int i = 0; i < desc_len; i++) {
-    mvwprintw(pa->win, 6 + i, (pa->width - strlen(PRV_DESCRIPTION[i])) / 2,
-              PRV_DESCRIPTION[i]);
+    mvwprintw(pa->win, 6 + i, (pa->width - strlen(s_DESCRIPTION[i])) / 2,
+              s_DESCRIPTION[i]);
   }
 
   wrefresh(pa->win);
 }
 
-static int prv_input(void) {
+static int s_input(void) {
   while (true) {
     int key = input_getkey_block();
     if (key == QUIT || key == CONTINUE) {
@@ -49,7 +49,7 @@ static int prv_input(void) {
   }
 }
 
-static void prv_delete(struct playagain *pa) {
+static void s_delete(struct playagain *pa) {
   wclear(pa->win);
   wrefresh(pa->win);
   delwin(pa->win);
@@ -57,9 +57,9 @@ static void prv_delete(struct playagain *pa) {
 }
 
 int playagain_run(int score) {
-  struct playagain *pa = prv_new();
-  prv_draw(pa, score);
-  int key = prv_input();
-  prv_delete(pa);
+  struct playagain *pa = s_new();
+  s_draw(pa, score);
+  int key = s_input();
+  s_delete(pa);
   return key;
 }

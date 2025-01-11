@@ -5,13 +5,13 @@
 #include "input.h"
 #include "welcome.h"
 
-static const char *PRV_TITLE = "SNAKE";
-static const char *PRV_DESCRIPTION[2] = {
+static const char *s_TITLE = "SNAKE";
+static const char *s_DESCRIPTION[2] = {
     "Press enter to play",
     "Press q to quit",
 };
 
-static struct welcome *prv_new(void) {
+static struct welcome *s_new(void) {
   struct welcome *wc = malloc(sizeof(struct welcome));
 
   wc->width = 60;
@@ -23,21 +23,21 @@ static struct welcome *prv_new(void) {
   return wc;
 }
 
-static void prv_draw(struct welcome *wc) {
+static void s_draw(struct welcome *wc) {
   box(wc->win, 0, 0);
 
-  mvwprintw(wc->win, 4, (wc->width - strlen(PRV_TITLE)) / 2, PRV_TITLE);
+  mvwprintw(wc->win, 4, (wc->width - strlen(s_TITLE)) / 2, s_TITLE);
 
-  int desc_len = (sizeof(PRV_DESCRIPTION) / sizeof(PRV_DESCRIPTION[0]));
+  int desc_len = (sizeof(s_DESCRIPTION) / sizeof(s_DESCRIPTION[0]));
   for (int i = 0; i < desc_len; i++) {
-    mvwprintw(wc->win, 6 + i, (wc->width - strlen(PRV_DESCRIPTION[i])) / 2,
-              PRV_DESCRIPTION[i]);
+    mvwprintw(wc->win, 6 + i, (wc->width - strlen(s_DESCRIPTION[i])) / 2,
+              s_DESCRIPTION[i]);
   }
 
   wrefresh(wc->win);
 }
 
-static int prv_input(void) {
+static int s_input(void) {
   while (true) {
     int key = input_getkey_block();
     if (key == QUIT || key == CONTINUE) {
@@ -46,7 +46,7 @@ static int prv_input(void) {
   }
 }
 
-static void prv_delete(struct welcome *wc) {
+static void s_delete(struct welcome *wc) {
   wclear(wc->win);
   wrefresh(wc->win);
   delwin(wc->win);
@@ -54,9 +54,9 @@ static void prv_delete(struct welcome *wc) {
 }
 
 int welcome_run(void) {
-  struct welcome *wc = prv_new();
-  prv_draw(wc);
-  int key = prv_input();
-  prv_delete(wc);
+  struct welcome *wc = s_new();
+  s_draw(wc);
+  int key = s_input();
+  s_delete(wc);
   return key;
 }

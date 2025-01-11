@@ -6,7 +6,7 @@
 #include "snake.h"
 #include "scoreboard.h"
 
-static const char *PRV_TITLE = "Score";
+static const char *s_TITLE = "Score";
 
 struct scoreboard *scoreboard_new(struct map *m, struct snake *s) {
   struct scoreboard *sb = malloc(sizeof(struct scoreboard));
@@ -27,7 +27,7 @@ void scoreboard_set_score(struct scoreboard *sb, struct snake *s) {
 
 void scoreboard_draw(struct scoreboard *sb) {
   box(sb->win, 0, 0);
-  mvwprintw(sb->win, 0, (sb->width - strlen(PRV_TITLE)) / 2, PRV_TITLE);
+  mvwprintw(sb->win, 0, (sb->width - strlen(s_TITLE)) / 2, s_TITLE);
   int score_strlen = (int)log10(sb->score) + 1;
   mvwprintw(sb->win, (sb->height - 1) / 2, (sb->width - score_strlen) / 2, "%d",
             sb->score);

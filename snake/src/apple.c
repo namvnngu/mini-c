@@ -4,7 +4,7 @@
 #include "snake.h"
 #include "apple.h"
 
-static int prv_random_range(int min, int max) {
+static int s_random_range(int min, int max) {
   return min + rand() % (max - min + 1);
 }
 
@@ -30,8 +30,8 @@ void apple_draw(struct apple *ap, struct map *m) {
 void apple_set_new_position(struct apple *ap, struct map *m, struct snake *s) {
   bool found = false;
   while (!found) {
-    ap->x = prv_random_range(1, m->width - m->border_size - ap->width);
-    ap->y = prv_random_range(1, m->height - m->border_size - ap->height);
+    ap->x = s_random_range(1, m->width - m->border_size - ap->width);
+    ap->y = s_random_range(1, m->height - m->border_size - ap->height);
 
     bool is_within_snake_body = false;
     for (int i = 0; i < s->length; i++) {

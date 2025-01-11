@@ -5,8 +5,8 @@
 #include "scoreboard.h"
 #include "help.h"
 
-static const char *PRV_TITLE = "Help";
-static const char *PRV_DESCRIPTION[5] = {
+static const char *s_TITLE = "Help";
+static const char *s_DESCRIPTION[5] = {
     "Up     w, up arrow",
     "Right  a, right arrow",
     "Down   s, down arrow",
@@ -20,7 +20,8 @@ struct help *help_new(struct map *m, struct scoreboard *sb) {
   h->width = 26;
   h->height = 9;
   h->startx = m->startx - h->width - 2; // 2 is gap between help and map
-  h->starty = m->starty + sb->height + 1; // 1 is gap between help and scoreboard
+  h->starty =
+      m->starty + sb->height + 1; // 1 is gap between help and scoreboard
   h->win = newwin(h->height, h->width, h->starty, h->startx);
 
   return h;
@@ -28,11 +29,11 @@ struct help *help_new(struct map *m, struct scoreboard *sb) {
 
 void help_draw(struct help *h) {
   box(h->win, 0, 0);
-  mvwprintw(h->win, 0, (h->width - strlen(PRV_TITLE)) / 2, PRV_TITLE);
+  mvwprintw(h->win, 0, (h->width - strlen(s_TITLE)) / 2, s_TITLE);
 
-  int desc_len = (sizeof(PRV_DESCRIPTION) / sizeof(PRV_DESCRIPTION[0]));
+  int desc_len = (sizeof(s_DESCRIPTION) / sizeof(s_DESCRIPTION[0]));
   for (int i = 0; i < desc_len; i++) {
-    mvwprintw(h->win, 2 + i, 2, PRV_DESCRIPTION[i]);
+    mvwprintw(h->win, 2 + i, 2, s_DESCRIPTION[i]);
   }
 
   wrefresh(h->win);
