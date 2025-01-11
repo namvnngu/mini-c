@@ -1,8 +1,8 @@
 #include <stdlib.h>
 
+#include "apple.h"
 #include "map.h"
 #include "snake.h"
-#include "apple.h"
 
 static int s_random_range(int min, int max) {
   return min + rand() % (max - min + 1);

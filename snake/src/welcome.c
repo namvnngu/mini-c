@@ -7,8 +7,8 @@
 
 static const char *s_TITLE = "SNAKE";
 static const char *s_DESCRIPTION[2] = {
-    "Press enter to play",
-    "Press q to quit",
+  "Press enter to play",
+  "Press q to quit",
 };
 
 static struct welcome *s_new(void) {
@@ -30,7 +30,9 @@ static void s_draw(struct welcome *wc) {
 
   int desc_len = (sizeof(s_DESCRIPTION) / sizeof(s_DESCRIPTION[0]));
   for (int i = 0; i < desc_len; i++) {
-    mvwprintw(wc->win, 6 + i, (wc->width - strlen(s_DESCRIPTION[i])) / 2,
+    mvwprintw(wc->win,
+              6 + i,
+              (wc->width - strlen(s_DESCRIPTION[i])) / 2,
               s_DESCRIPTION[i]);
   }
 

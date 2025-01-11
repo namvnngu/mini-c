@@ -8,8 +8,8 @@
 
 static const char *s_TITLE = "Your score is %d";
 static const char *s_DESCRIPTION[2] = {
-    "Press enter to play again",
-    "Press q to quit",
+  "Press enter to play again",
+  "Press q to quit",
 };
 
 static struct playagain *s_new(void) {
@@ -28,12 +28,17 @@ static void s_draw(struct playagain *pa, int score) {
   box(pa->win, 0, 0);
 
   int score_strlen = (int)log10(score) + 1;
-  mvwprintw(pa->win, 4, (pa->width - strlen(s_TITLE) - score_strlen) / 2,
-            s_TITLE, score);
+  mvwprintw(pa->win,
+            4,
+            (pa->width - strlen(s_TITLE) - score_strlen) / 2,
+            s_TITLE,
+            score);
 
   int desc_len = (sizeof(s_DESCRIPTION) / sizeof(s_DESCRIPTION[0]));
   for (int i = 0; i < desc_len; i++) {
-    mvwprintw(pa->win, 6 + i, (pa->width - strlen(s_DESCRIPTION[i])) / 2,
+    mvwprintw(pa->win,
+              6 + i,
+              (pa->width - strlen(s_DESCRIPTION[i])) / 2,
               s_DESCRIPTION[i]);
   }
 

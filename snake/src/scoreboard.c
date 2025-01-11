@@ -3,8 +3,8 @@
 #include <string.h>
 
 #include "map.h"
-#include "snake.h"
 #include "scoreboard.h"
+#include "snake.h"
 
 static const char *s_TITLE = "Score";
 
@@ -29,7 +29,10 @@ void scoreboard_draw(struct scoreboard *sb) {
   box(sb->win, 0, 0);
   mvwprintw(sb->win, 0, (sb->width - strlen(s_TITLE)) / 2, s_TITLE);
   int score_strlen = (int)log10(sb->score) + 1;
-  mvwprintw(sb->win, (sb->height - 1) / 2, (sb->width - score_strlen) / 2, "%d",
+  mvwprintw(sb->win,
+            (sb->height - 1) / 2,
+            (sb->width - score_strlen) / 2,
+            "%d",
             sb->score);
   wrefresh(sb->win);
 }

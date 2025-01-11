@@ -1,13 +1,13 @@
 #include <ncurses.h>
 #include <unistd.h>
 
-#include "map.h"
-#include "snake.h"
 #include "apple.h"
-#include "scoreboard.h"
 #include "game.h"
 #include "help.h"
 #include "input.h"
+#include "map.h"
+#include "scoreboard.h"
+#include "snake.h"
 
 int game_run(void) {
   struct map *m = map_new();

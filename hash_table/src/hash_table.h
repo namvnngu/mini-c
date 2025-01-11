@@ -17,7 +17,8 @@ struct hash_table *hash_table_new(void);
 void hash_table_delete(struct hash_table *ht);
 
 char *hash_table_pair_get_value(struct hash_table *ht, const char *key);
-void hash_table_pair_insert(struct hash_table *ht, const char *key,
+void hash_table_pair_insert(struct hash_table *ht,
+                            const char *key,
                             const char *value);
 void hash_table_pair_delete(struct hash_table *ht, const char *key);
 

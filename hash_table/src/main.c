@@ -1,5 +1,6 @@
-#include "hash_table.h"
 #include <stdio.h>
+
+#include "hash_table.h"
 
 int main(int argc, char *argv[]) {
   struct hash_table *ht = hash_table_new();

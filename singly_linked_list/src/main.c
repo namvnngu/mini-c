@@ -1,5 +1,6 @@
-#include "sll.h"
 #include <stdio.h>
+
+#include "sll.h"
 
 int main(int argc, char *argv[]) {
   struct sll *list = sll_new();

@@ -1,17 +1,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "help.h"
 #include "map.h"
 #include "scoreboard.h"
-#include "help.h"
 
 static const char *s_TITLE = "Help";
 static const char *s_DESCRIPTION[5] = {
-    "Up     w, up arrow",
-    "Right  a, right arrow",
-    "Down   s, down arrow",
-    "Left   d, left arrow",
-    "Quit   q",
+  "Up     w, up arrow",
+  "Right  a, right arrow",
+  "Down   s, down arrow",
+  "Left   d, left arrow",
+  "Quit   q",
 };
 
 struct help *help_new(struct map *m, struct scoreboard *sb) {

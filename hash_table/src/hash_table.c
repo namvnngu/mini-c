@@ -9,8 +9,8 @@
 static const int s_HASH_TABLE_PRIME_1 = 151;
 static const int s_HASH_TABLE_PRIME_2 = 163;
 static const int s_HASH_TABLE_INITIAL_BASE_SIZE = 50;
-static struct hash_table_pair s_HASH_TABLE_DELETED_PAIR = {NULL, NULL};
-static const int s_HASH_TABLE_LOAD_RANGE[2] = {10, 70};
+static struct hash_table_pair s_HASH_TABLE_DELETED_PAIR = { NULL, NULL };
+static const int s_HASH_TABLE_LOAD_RANGE[2] = { 10, 70 };
 
 static struct hash_table_pair *s_hash_table_pair_new(const char *k,
                                                      const char *v) {
@@ -95,7 +95,8 @@ static int s_hash(const char *s, const int a, const int m) {
   return (int)h;
 }
 
-static int s_hash_table_get_hash(const char *s, const int num_buckets,
+static int s_hash_table_get_hash(const char *s,
+                                 const int num_buckets,
                                  const int attempt) {
   const int hash_a = s_hash(s, s_HASH_TABLE_PRIME_1, num_buckets);
   if (attempt == 0) {
@@ -143,7 +144,8 @@ char *hash_table_pair_get_value(struct hash_table *ht, const char *key) {
   return NULL;
 }
 
-void hash_table_pair_insert(struct hash_table *ht, const char *key,
+void hash_table_pair_insert(struct hash_table *ht,
+                            const char *key,
                             const char *value) {
   if (s_hash_table_calc_load(ht) > s_HASH_TABLE_LOAD_RANGE[1]) {
     s_hash_table_resize_up(ht);
