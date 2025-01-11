@@ -1,5 +1,5 @@
-#ifndef _APPLE
-#define _APPLE
+#ifndef APPLE_H
+#define APPLE_H
 
 #include "map.h"
 #include "snake.h"
@@ -17,4 +17,4 @@ void apple_draw(struct apple *ap, struct map *m);
 void apple_set_new_position(struct apple *ap, struct map *m, struct snake *s);
 void apple_delete(struct apple *ap);
 
-#endif /* _APPLE */
+#endif /* APPLE_H */

@@ -1,5 +1,5 @@
-#ifndef _WELCOME
-#define _WELCOME
+#ifndef WELCOME_H
+#define WELCOME_H
 
 #include <ncurses.h>
 
@@ -13,4 +13,4 @@ struct welcome {
 
 int welcome_run(void);
 
-#endif /* _WELCOME */
+#endif /* WELCOME_H */

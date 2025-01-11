@@ -1,5 +1,5 @@
-#ifndef _HASH_TABLE
-#define _HASH_TABLE
+#ifndef HASH_TABLE_H
+#define HASH_TABLE_H
 
 struct hash_table_pair {
   char *key;
@@ -21,4 +21,4 @@ void hash_table_pair_insert(struct hash_table *ht, const char *key,
                             const char *value);
 void hash_table_pair_delete(struct hash_table *ht, const char *key);
 
-#endif /* _HASH_TABLE */
+#endif /* HASH_TABLE_H */

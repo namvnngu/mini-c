@@ -1,6 +1,6 @@
-#ifndef _GAME
-#define _GAME
+#ifndef GAME_H
+#define GAME_H
 
 int game_run(void);
 
-#endif /* _GAME */
+#endif /* GAME_H */

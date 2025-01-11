@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
   use_default_colors(); // Allow default terminal colors
   refresh();            // Draw the screen
 
-  endwin()
+  endwin();
 
   return 0;
 }

@@ -1,5 +1,5 @@
-#ifndef _HELP
-#define _HELP
+#ifndef HELP_H
+#define HELP_H
 
 #include <ncurses.h>
 
@@ -19,4 +19,4 @@ void help_draw(struct help *h);
 void help_clear(struct help *h);
 void help_delete(struct help *h);
 
-#endif /* _HELP */
+#endif /* HELP_H */

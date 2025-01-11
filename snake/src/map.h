@@ -1,5 +1,5 @@
-#ifndef _MAP
-#define _MAP
+#ifndef MAP_H
+#define MAP_H
 
 #include <ncurses.h>
 
@@ -18,4 +18,4 @@ void map_draw(struct map *m);
 void map_clear(struct map *m);
 void map_delete(struct map *m);
 
-#endif /* _MAP */
+#endif /* MAP_H */

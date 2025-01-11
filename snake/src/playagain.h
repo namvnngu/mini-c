@@ -1,5 +1,5 @@
-#ifndef _PLAYAGAIN
-#define _PLAYAGAIN
+#ifndef PLAYAGAIN_H
+#define PLAYAGAIN_H
 
 #include <ncurses.h>
 
@@ -13,4 +13,4 @@ struct playagain {
 
 int playagain_run(int score);
 
-#endif /* _PLAYAGAIN */
+#endif /* PLAYAGAIN_H */

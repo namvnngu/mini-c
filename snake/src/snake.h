@@ -1,5 +1,5 @@
-#ifndef _SNAKE
-#define _SNAKE
+#ifndef SNAKE_H
+#define SNAKE_H
 
 #include "map.h"
 
@@ -33,4 +33,4 @@ bool snake_hit_map_wall(struct snake *s, struct map *m);
 bool snake_hit_apple(struct snake *s, int applex, int appley);
 void snake_delete(struct snake *s);
 
-#endif /* _SNAKE */
+#endif /* SNAKE_H */

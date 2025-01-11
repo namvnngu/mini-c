@@ -1,5 +1,5 @@
-#ifndef _SCOREBOARD
-#define _SCOREBOARD
+#ifndef SCOREBOARD_H
+#define SCOREBOARD_H
 
 #include <ncurses.h>
 
@@ -21,4 +21,4 @@ void scoreboard_draw(struct scoreboard *sb);
 void scoreboard_clear(struct scoreboard *sb);
 void scoreboard_delete(struct scoreboard *sb);
 
-#endif /* _SCOREBOARD */
+#endif /* SCOREBOARD_H */
