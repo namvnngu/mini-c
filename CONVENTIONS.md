@@ -2,6 +2,7 @@
 
 ## Naming
 
+- Prefix: `flatcase`, e.g. namespaces, scopes.
 - Private symbols: `__`, two underscores between prefix and symbol name.
 - Public symbols: `_`, one underscore between prefix and symbol name.
 - Files: `snake_case`.
