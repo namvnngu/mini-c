@@ -5,8 +5,8 @@
 #include "map.h"
 #include "scoreboard.h"
 
-static const char *s_TITLE = "Help";
-static const char *s_DESCRIPTION[5] = {
+static const char *help__TITLE = "Help";
+static const char *help__DESCRIPTION[5] = {
   "Up     w, up arrow",
   "Right  a, right arrow",
   "Down   s, down arrow",
@@ -29,11 +29,11 @@ struct help *help_new(struct map *m, struct scoreboard *sb) {
 
 void help_draw(struct help *h) {
   box(h->win, 0, 0);
-  mvwprintw(h->win, 0, (h->width - strlen(s_TITLE)) / 2, s_TITLE);
+  mvwprintw(h->win, 0, (h->width - strlen(help__TITLE)) / 2, help__TITLE);
 
-  int desc_len = (sizeof(s_DESCRIPTION) / sizeof(s_DESCRIPTION[0]));
+  int desc_len = (sizeof(help__DESCRIPTION) / sizeof(help__DESCRIPTION[0]));
   for (int i = 0; i < desc_len; i++) {
-    mvwprintw(h->win, 2 + i, 2, s_DESCRIPTION[i]);
+    mvwprintw(h->win, 2 + i, 2, help__DESCRIPTION[i]);
   }
 
   wrefresh(h->win);

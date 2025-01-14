@@ -4,7 +4,7 @@
 
 #include "sll.h"
 
-static void s_exit_out_of_memory(void) {
+static void sll__exit_out_of_memory(void) {
   fprintf(stderr, "Out of memory.");
   exit(1);
 }
@@ -13,7 +13,7 @@ struct node *node_new(int data) {
   struct node *node = malloc(sizeof(struct node));
 
   if (node == NULL) {
-    s_exit_out_of_memory();
+    sll__exit_out_of_memory();
   }
 
   node->data = data;
@@ -26,7 +26,7 @@ struct sll *sll_new(void) {
   struct sll *list = malloc(sizeof(struct sll));
 
   if (list == NULL) {
-    s_exit_out_of_memory();
+    sll__exit_out_of_memory();
   }
 
   list->head = NULL;

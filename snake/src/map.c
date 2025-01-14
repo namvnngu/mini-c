@@ -8,7 +8,7 @@
 // Source: https://stackoverflow.com/a/60046028
 #define TERMINAL_WIDTH_UNIT 2
 
-static void s_draw_point(struct map *m, int x, int y, int color) {
+static void map__draw_point(struct map *m, int x, int y, int color) {
   wattron(m->win, COLOR_PAIR(color));
   mvwprintw(m->win, y, x * TERMINAL_WIDTH_UNIT, "  ");
   wattroff(m->win, COLOR_PAIR(color));
@@ -28,7 +28,7 @@ struct map *map_new(void) {
   m->win =
       newwin(m->height, m->width * TERMINAL_WIDTH_UNIT, m->starty, m->startx);
   m->border_size = 1;
-  m->draw_point = s_draw_point;
+  m->draw_point = map__draw_point;
 
   return m;
 }
