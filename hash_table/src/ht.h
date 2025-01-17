@@ -1,7 +1,7 @@
 #ifndef HASH_TABLE_H
 #define HASH_TABLE_H
 
-struct htpair {
+struct ht_entry {
   char *key;
   char *value;
 };
@@ -10,14 +10,13 @@ struct ht {
   int base_size;
   int size;
   int count;
-  struct htpair **pairs;
+  struct ht_entry **entries;
 };
 
 struct ht *ht_new(void);
-void ht_delete(struct ht *ht);
-
-char *htpair_get_value(struct ht *ht, const char *key);
-void htpair_insert(struct ht *ht, const char *key, const char *value);
-void htpair_delete(struct ht *ht, const char *key);
+char *ht_get(struct ht *ht, const char *key);
+void ht_set(struct ht *ht, const char *key, const char *value);
+void ht_del(struct ht *ht, const char *key);
+void ht_free(struct ht *ht);
 
 #endif /* HASH_TABLE_H */
