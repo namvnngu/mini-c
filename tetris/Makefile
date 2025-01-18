@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS := -std=c99 -Wall -Werror -Wextra
-DBGFLAGS := -g
+DBGFLAGS := -g -fsanitize=address
 COBJFLAGS := $(CFLAGS) -c
 INCFLAGS :=
 LDFLAGS := -lncurses
@@ -18,27 +18,38 @@ SRC := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c)))
 OBJ := $(addprefix $(OBJ_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 OBJ_DEBUG := $(addprefix $(DBG_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 
-.PHONY: prepare build run debug clean
+.PHONY: debug
+debug: prepare build-debug run-debug
 
-default: prepare build run
+.PHONY: release
+release: prepare build-release run-release
 
+.PHONY: prepare
 prepare:
 	@mkdir -p $(BIN_PATH) $(OBJ_PATH) $(DBG_PATH)
 
-build: $(TARGET)
+.PHONY: build-release
+build-release: $(TARGET)
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	$(CC) $(COBJFLAGS) $(INCFLAGS) -o $@ $<
 
-run:
+.PHONY: run-release
+run-release:
 	$(TARGET)
 
-debug: $(TARGET_DBG)
+.PHONY: build-debug
+build-debug: $(TARGET_DBG)
 $(TARGET_DBG): $(OBJ_DEBUG)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(DBGFLAGS) -o $@ $^
 $(DBG_PATH)/%.o: $(SRC_PATH)/%.c
 	$(CC) $(COBJFLAGS) $(INCFLAGS) $(DBGFLAGS) -o $@ $<
 
+.PHONY: run-debug
+run-debug:
+	$(TARGET_DBG)
+
+.PHONY: clean
 clean:
 	rm -rf $(BIN_PATH) $(OBJ_PATH) $(DBG_PATH)

@@ -2,7 +2,7 @@
 
 #include "sll.h"
 
-int main(int argc, char *argv[]) {
+int main(void) {
   struct sll *list = sll_new();
 
   printf("insert head");

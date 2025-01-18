@@ -2,7 +2,7 @@
 
 #include "ht.h"
 
-int main(int argc, char *argv[]) {
+int main(void) {
   struct ht *ht = ht_new();
 
   printf("hash table size: %d\n", ht->size);
