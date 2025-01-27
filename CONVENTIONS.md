@@ -17,6 +17,7 @@
 - Functions: `snake_case`.
 - Parameters: `snake_case`.
 - Variables: `snake_case`.
+- Typedefs: `snake_case`.
 
 **Notes:**
 - Do not use `__` or `_` prefix for variables, functions, macros and types [^1]. They are used by the compiler and standard library. Here's what [the C standard](http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf) says (section 7.1.3) [^2]:
