@@ -37,6 +37,7 @@ obj/
 *.x86_64
 *.hex
 bin/
+release/
 
 # Debug files
 *.dSYM/
@@ -53,3 +54,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Tags
+tags
