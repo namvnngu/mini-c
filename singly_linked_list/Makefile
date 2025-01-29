@@ -10,11 +10,11 @@ DBG_PATH := debug
 RELEASE_PATH := release
 
 TARGET_NAME := sll
-TARGET := $(RELEASE_PATH)/$(TARGET_NAME)
+TARGET_RELEASE := $(RELEASE_PATH)/$(TARGET_NAME)
 TARGET_DBG := $(DBG_PATH)/$(TARGET_NAME)
 
 SRC := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c)))
-OBJ := $(addprefix $(RELEASE_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
+OBJ_RELEASE := $(addprefix $(RELEASE_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 OBJ_DEBUG := $(addprefix $(DBG_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 
 .PHONY: debug
@@ -28,15 +28,15 @@ prepare:
 	@mkdir -p $(RELEASE_PATH) $(RELEASE_PATH) $(DBG_PATH)
 
 .PHONY: build-release
-build-release: $(TARGET)
-$(TARGET): $(OBJ)
+build-release: $(TARGET_RELEASE)
+$(TARGET_RELEASE): $(OBJ_RELEASE)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 $(RELEASE_PATH)/%.o: $(SRC_PATH)/%.c
 	$(CC) $(COBJFLAGS) $(INCFLAGS) -o $@ $<
 
 .PHONY: run-release
 run-release:
-	$(TARGET)
+	$(TARGET_RELEASE)
 
 .PHONY: build-debug
 build-debug: $(TARGET_DBG)

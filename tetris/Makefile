@@ -10,12 +10,12 @@ DBG_PATH := debug
 RELEASE_PATH := release
 
 TARGET_NAME := tetris
-TARGET := $(RELEASE_PATH)/$(TARGET_NAME)
+TARGET_RELEASE := $(RELEASE_PATH)/$(TARGET_NAME)
 TARGET_DBG := $(DBG_PATH)/$(TARGET_NAME)
 
-SRC := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c)))
-OBJ := $(addprefix $(RELEASE_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
-OBJ_DEBUG := $(addprefix $(DBG_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
+SRC := $(SRC_PATH)/main.c $(SRC_PATH)/ecs.c
+OBJ_RELEASE := $(RELEASE_PATH)/main.o
+OBJ_DEBUG := $(DBG_PATH)/main.o
 
 .PHONY: debug
 debug: prepare build-debug run-debug
@@ -28,21 +28,21 @@ prepare:
 	@mkdir -p $(RELEASE_PATH) $(RELEASE_PATH) $(DBG_PATH)
 
 .PHONY: build-release
-build-release: $(TARGET)
-$(TARGET): $(OBJ)
+build-release: $(TARGET_RELEASE)
+$(TARGET_RELEASE): $(OBJ_RELEASE)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
-$(RELEASE_PATH)/%.o: $(SRC_PATH)/%.c
+$(OBJ_RELEASE): $(SRC)
 	$(CC) $(COBJFLAGS) $(INCFLAGS) -o $@ $<
 
 .PHONY: run-release
 run-release:
-	$(TARGET)
+	$(TARGET_RELEASE)
 
 .PHONY: build-debug
 build-debug: $(TARGET_DBG)
 $(TARGET_DBG): $(OBJ_DEBUG)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(DBGFLAGS) -o $@ $^
-$(DBG_PATH)/%.o: $(SRC_PATH)/%.c
+$(OBJ_DEBUG): $(SRC)
 	$(CC) $(COBJFLAGS) $(INCFLAGS) $(DBGFLAGS) -o $@ $<
 
 .PHONY: run-debug
