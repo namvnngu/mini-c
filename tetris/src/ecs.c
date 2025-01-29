@@ -15,15 +15,27 @@ struct ecs_entity_stack {
 };
 
 struct ecs_component_pool {
+  /* The array of component data. */
   void *data;
+
+  /* The fixed number of components. */
   uint32_t count;
+
+  /* The size of a single component. */
   uint32_t unit_size;
+
+  /* The stack of indices pointing to unused component data in `data`. */
   uint32_t *indices;
 };
 
 struct ecs_world {
+  /* The stack of unused entity IDs. */
   uint32_t *entities;
+
+  /* The array of indices pointing to data in the component pool's data. */
   uint32_t *components;
+
+  /* The array of component pools where indices represents component type. */
   struct ecs_component_pool *component_pools;
 };
 
