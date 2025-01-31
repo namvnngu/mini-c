@@ -1,9 +1,9 @@
 CC = cc
-CFLAGS := -std=c99 -Wall -Werror -Wextra
-DBGFLAGS := -g -fsanitize=address
-COBJFLAGS := $(CFLAGS) -c
+COBJFLAGS := -std=c99 -Wall -Werror -Wextra -c
 INCFLAGS :=
 LDFLAGS := -lncurses
+RELEASEFLAGS := -O3
+DBGFLAGS = -g -fsanitize=address
 
 SRC_PATH := src
 DBG_PATH := debug
@@ -30,9 +30,9 @@ prepare:
 .PHONY: build-release
 build-release: $(TARGET_RELEASE)
 $(TARGET_RELEASE): $(OBJ_RELEASE)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+	$(CC) $(LDFLAGS) -o $@ $^
 $(RELEASE_PATH)/%.o: $(SRC_PATH)/%.c
-	$(CC) $(COBJFLAGS) $(INCFLAGS) -o $@ $<
+	$(CC) $(COBJFLAGS) $(RELEASEFLAGS) $(INCFLAGS) -o $@ $<
 
 .PHONY: run-release
 run-release:
@@ -41,9 +41,9 @@ run-release:
 .PHONY: build-debug
 build-debug: $(TARGET_DBG)
 $(TARGET_DBG): $(OBJ_DEBUG)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(DBGFLAGS) -o $@ $^
+	$(CC) $(LDFLAGS) $(DBGFLAGS) -o $@ $^
 $(DBG_PATH)/%.o: $(SRC_PATH)/%.c
-	$(CC) $(COBJFLAGS) $(INCFLAGS) $(DBGFLAGS) -o $@ $<
+	$(CC) $(COBJFLAGS) $(DBGFLAGS) $(INCFLAGS) -o $@ $<
 
 .PHONY: run-debug
 run-debug:
