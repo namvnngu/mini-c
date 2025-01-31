@@ -1,3 +1,5 @@
+# Hash Table
+
 The hash table is open-addressed and double-hashed.
 
 References:
