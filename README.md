@@ -6,6 +6,7 @@ The [C](https://en.wikipedia.org/wiki/C_(programming_language)) projects that I 
 2. [Hash Table](./hash_table)
 3. [Singly Linked List](./singly_linked_list)
 4. [Snake](./snake)
-5. [Tetris](./tetris)
+5. [String Inspector](./string_inspector)
+6. [Tetris](./tetris)
 
 The repository is under [UNLICENSE](https://unlicense.org).
