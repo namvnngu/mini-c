@@ -1,21 +1,22 @@
-CC = cc
+CC        := cc
 COBJFLAGS := -std=c99 -Wall -Werror -Wextra -c
-INCFLAGS :=
-LDFLAGS := -lncurses
-RELEASEFLAGS := -O3
-DBGFLAGS = -O0 -g
+INCFLAGS  :=
+LDFLAGS   := -lncurses
 
 SRC_PATH := src
-DBG_PATH := debug
-RELEASE_PATH := release
+SRC      := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c)))
 
 TARGET_NAME := tetris
-TARGET_RELEASE := $(RELEASE_PATH)/$(TARGET_NAME)
-TARGET_DBG := $(DBG_PATH)/$(TARGET_NAME)
 
-SRC := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c)))
-OBJ_RELEASE := $(addprefix $(RELEASE_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
-OBJ_DEBUG := $(addprefix $(DBG_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
+DBG_PATH   := debug
+DBG_TARGET := $(DBG_PATH)/$(TARGET_NAME)
+DBG_OBJ    := $(addprefix $(DBG_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
+DBG_FLAGS  := -O0 -g
+
+RELEASE_PATH   := release
+RELEASE_TARGET := $(RELEASE_PATH)/$(TARGET_NAME)
+RELEASE_OBJ    := $(addprefix $(RELEASE_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
+RELEASE_FLAGS  := -O3
 
 .PHONY: debug
 debug: prepare build-debug run-debug
@@ -25,29 +26,29 @@ release: prepare build-release run-release
 
 .PHONY: prepare
 prepare:
-	@mkdir -p $(RELEASE_PATH) $(RELEASE_PATH) $(DBG_PATH)
-
-.PHONY: build-release
-build-release: $(TARGET_RELEASE)
-$(TARGET_RELEASE): $(OBJ_RELEASE)
-	$(CC) $(LDFLAGS) -o $@ $^
-$(RELEASE_PATH)/%.o: $(SRC_PATH)/%.c
-	$(CC) $(COBJFLAGS) $(RELEASEFLAGS) $(INCFLAGS) -o $@ $<
-
-.PHONY: run-release
-run-release:
-	$(TARGET_RELEASE)
+	@mkdir -p $(RELEASE_PATH) $(DBG_PATH)
 
 .PHONY: build-debug
-build-debug: $(TARGET_DBG)
-$(TARGET_DBG): $(OBJ_DEBUG)
-	$(CC) $(LDFLAGS) $(DBGFLAGS) -o $@ $^
+build-debug: $(DBG_TARGET)
+$(DBG_TARGET): $(DBG_OBJ)
+	$(CC) $(LDFLAGS) $(DBG_FLAGS) -o $@ $^
 $(DBG_PATH)/%.o: $(SRC_PATH)/%.c
-	$(CC) $(COBJFLAGS) $(DBGFLAGS) $(INCFLAGS) -o $@ $<
+	$(CC) $(COBJFLAGS) $(DBG_FLAGS) $(INCFLAGS) -o $@ $<
 
 .PHONY: run-debug
 run-debug:
-	$(TARGET_DBG)
+	$(DBG_TARGET)
+
+.PHONY: build-release
+build-release: $(RELEASE_TARGET)
+$(RELEASE_TARGET): $(RELEASE_OBJ)
+	$(CC) $(LDFLAGS) -o $@ $^
+$(RELEASE_PATH)/%.o: $(SRC_PATH)/%.c
+	$(CC) $(COBJFLAGS) $(RELEASE_FLAGS) $(INCFLAGS) -o $@ $<
+
+.PHONY: run-release
+run-release:
+	$(RELEASE_TARGET)
 
 .PHONY: clean
 clean:
