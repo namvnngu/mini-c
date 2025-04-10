@@ -1,4 +1,4 @@
-TOPTARGETS := dev release clean
+TOPTARGETS := run clean
 
 PROJECTS := $(wildcard */.)
 

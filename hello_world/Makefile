@@ -1,55 +1,28 @@
 CC        := cc
-COBJFLAGS := -std=c99 -Wall -Werror -Wextra -c
-INCFLAGS  :=
+CPPFLAGS  :=
+CFLAGS    := -std=c99 -Wall -Werror -Wextra
 LDFLAGS   :=
+LOADLIBES :=
+LDLIBS    :=
 
-SRC_PATH := src
-SRC      := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c)))
+BIN  := main
+SRC  := $(wildcard *.c)
+OBJ  := $(SRC:.c=.o)
 
-TARGET_NAME := hello
+DEV := 0
 
-DBG_PATH   := debug
-DBG_TARGET := $(DBG_PATH)/$(TARGET_NAME)
-DBG_OBJ    := $(addprefix $(DBG_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
-DBG_FLAGS  := -O0 -g
+ifeq ($(DEV), 1)
+	CFLAGS += -O0 -g
+else
+	CFLAGS += -O3
+endif
 
-RELEASE_PATH   := release
-RELEASE_TARGET := $(RELEASE_PATH)/$(TARGET_NAME)
-RELEASE_OBJ    := $(addprefix $(RELEASE_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
-RELEASE_FLAGS  := -O3
+$(BIN): $(OBJ)
 
-.PHONY: debug
-debug: prepare build-debug run-debug
-
-.PHONY: release
-release: prepare build-release run-release
-
-.PHONY: prepare
-prepare:
-	@mkdir -p $(RELEASE_PATH) $(DBG_PATH)
-
-.PHONY: build-debug
-build-debug: $(DBG_TARGET)
-$(DBG_TARGET): $(DBG_OBJ)
-	$(CC) $(LDFLAGS) $(DBG_FLAGS) -o $@ $^
-$(DBG_PATH)/%.o: $(SRC_PATH)/%.c
-	$(CC) $(COBJFLAGS) $(DBG_FLAGS) $(INCFLAGS) -o $@ $<
-
-.PHONY: run-debug
-run-debug:
-	$(DBG_TARGET)
-
-.PHONY: build-release
-build-release: $(RELEASE_TARGET)
-$(RELEASE_TARGET): $(RELEASE_OBJ)
-	$(CC) $(LDFLAGS) -o $@ $^
-$(RELEASE_PATH)/%.o: $(SRC_PATH)/%.c
-	$(CC) $(COBJFLAGS) $(RELEASE_FLAGS) $(INCFLAGS) -o $@ $<
-
-.PHONY: run-release
-run-release:
-	$(RELEASE_TARGET)
+.PHONY: run
+run: $(BIN)
+	./$(BIN)
 
 .PHONY: clean
 clean:
-	rm -rf $(RELEASE_PATH) $(DBG_PATH)
+	rm -rf $(OBJ) $(BIN)
