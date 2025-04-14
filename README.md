@@ -1,6 +1,6 @@
 # mini-c
 
-The [C](https://en.wikipedia.org/wiki/C_(programming_language)) projects that I did and I am doing:
+The [C](https://www.c-language.org) projects that I did and I am doing:
 
 1. [Hello World](./hello_world)
 2. [Hash Table](./hash_table)
