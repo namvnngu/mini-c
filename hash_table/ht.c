@@ -9,8 +9,8 @@
 static const int HT__PRIME_1 = 151;
 static const int HT__PRIME_2 = 163;
 static const int HT__INITIAL_BASE_SIZE = 50;
-static struct ht_entry HT__DELETED_ENTRY = { NULL, NULL };
-static const int HT__LOAD_RANGE[2] = { 10, 70 };
+static struct ht_entry HT__DELETED_ENTRY = {NULL, NULL};
+static const int HT__LOAD_RANGE[2] = {10, 70};
 
 static struct ht_entry *ht_entry__new(const char *k, const char *v) {
   struct ht_entry *entry = malloc(sizeof(struct ht_entry));
