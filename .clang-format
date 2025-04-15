@@ -14,6 +14,7 @@ ExperimentalAutoDetectBinPacking: true
 IndentCaseLabels: true
 IndentWidth: 2
 PenaltyReturnTypeOnItsOwnLine: 100
+SpaceInEmptyBlock: false
 SpacesInContainerLiterals: true
 UseTab: Never
 ---
@@ -32,6 +33,7 @@ ExperimentalAutoDetectBinPacking: true
 IndentCaseLabels: true
 IndentWidth: 2
 PenaltyReturnTypeOnItsOwnLine: 100
+SpaceInEmptyBlock: false
 SpacesInContainerLiterals: true
 UseTab: Never
 ...
