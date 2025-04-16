@@ -7,7 +7,8 @@ The [C](https://www.c-language.org) projects that I did and I am doing:
 3. [Singly Linked List](./singly_linked_list)
 4. [Snake NCURSES](./snake_ncurses)
 5. [String Inspector](./string_inspector)
-5. [Fizz Buzz](./fizzbuzz)
-6. [Tetris NCURSES](./tetris_ncurses)
+6. [Fizz Buzz](./fizzbuzz)
+7. [Prime Sieve](./prime_sieve)
+8. [Tetris NCURSES](./tetris_ncurses)
 
 The repository is under [UNLICENSE](https://unlicense.org).
