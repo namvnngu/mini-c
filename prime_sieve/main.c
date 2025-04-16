@@ -2,15 +2,15 @@
 
 int main(void) {
   const int UPTO = 1000;
-  const int N = UPTO - 2 + 1;
+  const int FIRST_PRIME = 2;
+  const int N = UPTO - FIRST_PRIME + 1;
   int list[UPTO];
 
   for (int i = 0; i < N; i++) {
     if (i == 0) {
-      list[i] = 2;
+      list[i] = FIRST_PRIME;
     } else {
-      int num = 2 + i;
-      list[i] = num % 2 == 0 ? 0 : num;
+      list[i] = (FIRST_PRIME + i) % 2 == 0 ? 0 : FIRST_PRIME + i;
     }
   }
 
