@@ -132,8 +132,13 @@ int main(void) {
     }
 
     if (group_len == 3) {
-      // TODO: Handle teen
+      // TODO: Hanlde the 1st digit is 0
+      // TODO: Hanlde the 2nd digit is 0
       // TODO: Hanlde the 3rd digit is 0
+      // TODO: Hanlde both 1st and 2nd digit is 0
+      // TODO: Hanlde both 1st and 3rd digit is 0
+      // TODO: Hanlde both 2nd and 3rd digit is 0
+      // TODO: Handle the 2nd digit is 1
       char first_digit = NUMBER[start_i];
       char second_digit = NUMBER[start_i + 1];
       char third_digit = NUMBER[start_i + 2];
@@ -181,10 +186,11 @@ int main(void) {
       "one billion, one hundred and forty-seven million, four hundred and "
       "eighty-three thousand, six hundred and forty-seven";
   if (strcmp(words, expected) == 0) {
-    printf("\033[32mSUCCESS: %s\033[0m\n", words);
-    return 1;
+    printf("\n\033[1;42;39m PASS \033[0m \033[1m%s\033[0m\n", NUMBER);
+    printf("  %s\n", words);
   } else {
-    printf("\033[31mFAIL: %s\033[0m\n", words);
-    return 0;
+    printf("\n\033[1;41;39m FAIL \033[0m \033[1m%s\033[0m\n", NUMBER);
+    printf("  \033[1;32m EXPECTED\033[0m: %s\n", expected);
+    printf("    \033[1;31m ACTUAL\033[0m: %s\n", words);
   }
 }
