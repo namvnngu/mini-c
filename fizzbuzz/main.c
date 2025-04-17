@@ -1,35 +1,35 @@
 #include <stdio.h>
 
 void fizzbuzz(char buf[], int buf_size, int up_to) {
-  int total_written = 0;
+  int total_written_size = 0;
 
   for (int i = 1; i <= up_to; i++) {
-    int remaining_size = buf_size - total_written;
+    int remaining_size = buf_size - total_written_size;
 
     if (remaining_size <= 0) {
       break;
     }
 
-    char *current_pos = buf + total_written;
+    char *curr_pos = buf + total_written_size;
     int is_last = (i == up_to);
-    int written = 0;
+    int written_size = 0;
     const char *suffix = is_last ? "." : ", ";
 
     if (i % 15 == 0) {
-      written = snprintf(current_pos, remaining_size, "FizzBuzz%s", suffix);
+      written_size = snprintf(curr_pos, remaining_size, "FizzBuzz%s", suffix);
     } else if (i % 3 == 0) {
-      written = snprintf(current_pos, remaining_size, "Fizz%s", suffix);
+      written_size = snprintf(curr_pos, remaining_size, "Fizz%s", suffix);
     } else if (i % 5 == 0) {
-      written = snprintf(current_pos, remaining_size, "Buzz%s", suffix);
+      written_size = snprintf(curr_pos, remaining_size, "Buzz%s", suffix);
     } else {
-      written = snprintf(current_pos, remaining_size, "%d%s", i, suffix);
+      written_size = snprintf(curr_pos, remaining_size, "%d%s", i, suffix);
     }
 
-    if (written < 0 || written >= remaining_size) {
+    if (written_size < 0 || written_size >= remaining_size) {
       break;
     }
 
-    total_written += written;
+    total_written_size += written_size;
   }
 }
 
