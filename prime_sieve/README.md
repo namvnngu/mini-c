@@ -1,6 +1,6 @@
 # Prime Sieve
 
-A simple terminal program to find prime numbers.
+A simple terminal program finds prime numbers.
 
 <sup>There are 168 prime numbers up to the number 1000.</sup>
 
