@@ -10,8 +10,8 @@ int main(void) {
     if (i == 0) {
       primes[i] = FIRST_PRIME;
     } else {
-      int current_number = FIRST_PRIME + i;
-      primes[i] = current_number % 2 == 0 ? 0 : current_number;
+      int num = FIRST_PRIME + i;
+      primes[i] = num % 2 == 0 ? 0 : num;
     }
   }
 
