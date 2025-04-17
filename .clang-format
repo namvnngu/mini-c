@@ -3,8 +3,11 @@ Language: C
 AlignArrayOfStructures: Left
 AlignConsecutiveMacros:
   Enabled: true
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: None
 BinPackArguments: false
 BinPackParameters: false
@@ -22,8 +25,11 @@ Language: Cpp
 AlignArrayOfStructures: Left
 AlignConsecutiveMacros:
   Enabled: true
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: None
 BinPackArguments: false
 BinPackParameters: false
