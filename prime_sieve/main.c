@@ -10,7 +10,8 @@ int main(void) {
     if (i == 0) {
       list[i] = FIRST_PRIME;
     } else {
-      list[i] = (FIRST_PRIME + i) % 2 == 0 ? 0 : FIRST_PRIME + i;
+      int num = FIRST_PRIME + i;
+      list[i] = num % 2 == 0 ? 0 : num;
     }
   }
 
