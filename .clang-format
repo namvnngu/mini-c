@@ -1,6 +1,6 @@
 ---
 Language: C
-AlignArrayOfStructures: Left
+AlignArrayOfStructures: None
 AlignConsecutiveMacros:
   Enabled: true
 AlignConsecutiveShortCaseStatements:
@@ -14,6 +14,7 @@ BinPackArguments: false
 BinPackParameters: false
 BracedInitializerIndentWidth: 2
 ColumnLimit: 80
+ContinuationIndentWidth: 2
 ExperimentalAutoDetectBinPacking: true
 IndentCaseLabels: true
 IndentWidth: 2
@@ -23,7 +24,7 @@ SpacesInContainerLiterals: true
 UseTab: Never
 ---
 Language: Cpp
-AlignArrayOfStructures: Left
+AlignArrayOfStructures: None
 AlignConsecutiveMacros:
   Enabled: true
 AlignConsecutiveShortCaseStatements:
@@ -37,6 +38,7 @@ BinPackArguments: false
 BinPackParameters: false
 BracedInitializerIndentWidth: 2
 ColumnLimit: 80
+ContinuationIndentWidth: 2
 ExperimentalAutoDetectBinPacking: true
 IndentCaseLabels: true
 IndentWidth: 2
