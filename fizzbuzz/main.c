@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-void fizzbuzz(char buf[], int buf_size, int up_to) {
-  int total_written_size = 0;
+void fizzbuzz(char buf[], size_t buf_size, size_t up_to) {
+  size_t total_written_size = 0;
 
-  for (int i = 1; i <= up_to; i++) {
+  for (size_t i = 1; i <= up_to; i++) {
     int remaining_size = buf_size - total_written_size;
 
     if (remaining_size <= 0) {
@@ -11,9 +11,8 @@ void fizzbuzz(char buf[], int buf_size, int up_to) {
     }
 
     char *curr_pos = buf + total_written_size;
-    int is_last = (i == up_to);
-    int written_size = 0;
-    const char *suffix = is_last ? "." : ", ";
+    size_t written_size = 0;
+    const char *suffix = i == up_to ? "." : ", ";
 
     if (i % 15 == 0) {
       written_size = snprintf(curr_pos, remaining_size, "FizzBuzz%s", suffix);
@@ -22,10 +21,10 @@ void fizzbuzz(char buf[], int buf_size, int up_to) {
     } else if (i % 5 == 0) {
       written_size = snprintf(curr_pos, remaining_size, "Buzz%s", suffix);
     } else {
-      written_size = snprintf(curr_pos, remaining_size, "%d%s", i, suffix);
+      written_size = snprintf(curr_pos, remaining_size, "%zu%s", i, suffix);
     }
 
-    if (written_size < 0 || written_size >= remaining_size) {
+    if (written_size < 0) {
       break;
     }
 
