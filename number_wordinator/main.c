@@ -2,115 +2,121 @@
 #include <stdio.h>
 #include <string.h>
 
-char *ones[] = {
+char *ONES[] = {
   "zero",    "one",     "two",       "three",    "four",
   "five",    "six",     "seven",     "eight",    "nine",
   "ten",     "eleven",  "twelve",    "thirteen", "fourteen",
   "fifteen", "sixteen", "seventeen", "eighteen", "nineteen",
 };
 
-char *tens[] = {
+char *TENS[] = {
   // clang-format off
   "",      "",      "twenty",  "thirty", "forty",
   "fifty", "sixty", "seventy", "eighty", "ninety",
   // clang-format on
 };
 
-char *groups[] = {
+char *SCALES[] = {
   // clang-format off
   "",         "thousand",    "million", "billion",
   "trillion", "quadrillion", "quintillion",
   // clang-format on
 };
 
-const size_t MAX_GROUP_LEN = 3;
+const size_t MAX_GROUP_SIZE = 3;
 
-struct testcase_t {
+struct testcase {
   char *input;
   char *expected;
 };
 
-void number_wordinator(char output[], size_t output_size, char input_digits[]) {
-  size_t input_len = strlen(input_digits);
-
-  bool evenly_divisible = input_len % MAX_GROUP_LEN == 0;
-  size_t group_total = evenly_divisible ? input_len / MAX_GROUP_LEN
-                                        : input_len / MAX_GROUP_LEN + 1;
-
-  bool leading_zeros = true;
+void number_wordinator(char output[],
+                       size_t output_size,
+                       char input_digits[],
+                       size_t input_len) {
+  bool has_leading_zeros = true;
   size_t leading_zeros_group_count = 0;
+  size_t group_total = (input_len + MAX_GROUP_SIZE - 1) / MAX_GROUP_SIZE;
   size_t output_len = 0;
 
   for (size_t group_i = 0; group_i < group_total; group_i++) {
-    char group_digits[3] = {'0', '0', '0'};
-    int char_offset_i = 0;
-    if (evenly_divisible) {
-      char_offset_i = group_i * MAX_GROUP_LEN;
-    } else {
-      int remainder = input_len % MAX_GROUP_LEN;
-      int missing = MAX_GROUP_LEN - remainder;
-      char_offset_i = MAX_GROUP_LEN * group_i - missing;
+    char group[3] = {'0', '0', '0'};
+    int input_offset_i = group_i * MAX_GROUP_SIZE;
+
+    if (input_len % MAX_GROUP_SIZE != 0) {
+      int missing = MAX_GROUP_SIZE - (input_len % MAX_GROUP_SIZE);
+      input_offset_i -= missing;
     }
-    for (int i = 0; i < MAX_GROUP_LEN; ++i) {
-      int digit_i = char_offset_i + i;
-      if (digit_i >= 0 && digit_i < input_len) {
-        group_digits[i] = input_digits[digit_i];
+
+    for (size_t i = 0; i < MAX_GROUP_SIZE; i++) {
+      int digit_i = input_offset_i + i;
+      if (digit_i >= 0 && digit_i < (int)input_len) {
+        group[i] = input_digits[digit_i];
       }
     }
 
-    int number = (group_digits[0] - '0') * 100  //
-                 + (group_digits[1] - '0') * 10 //
-                 + (group_digits[2] - '0');
+    int number = (group[0] - '0') * 100 + //
+                 (group[1] - '0') * 10 +  //
+                 (group[2] - '0');
 
     if (number != 0) {
-      leading_zeros = false;
+      has_leading_zeros = false;
     }
-    if (leading_zeros) {
+    if (has_leading_zeros) {
       leading_zeros_group_count++;
       continue;
     }
 
-    if (number >= 100) {
-      char *format = number % 100 == 0 ? "%s hundred" : "%s hundred and ";
+    int temp_number = number;
+    if (temp_number >= 100) {
+      char *format = temp_number % 100 == 0 ? "%s hundred" : "%s hundred and ";
       output_len += snprintf(output + output_len,
                              output_size - output_len,
                              format,
-                             ones[number / 100]);
-      number %= 100;
+                             ONES[temp_number / 100]);
+      temp_number %= 100;
     }
-    if (number >= 20) {
-      char *format = number % 10 == 0 ? "%s" : "%s-";
+    if (temp_number >= 20) {
+      char *format = temp_number % 10 == 0 ? "%s" : "%s-";
       output_len += snprintf(output + output_len,
                              output_size - output_len,
                              format,
-                             tens[number / 10]);
-
-      number %= 10;
+                             TENS[temp_number / 10]);
+      temp_number %= 10;
     }
-    if (number > 0) {
+    if (temp_number > 0) {
       char *format = "%s";
       output_len += snprintf(output + output_len,
                              output_size - output_len,
                              format,
-                             ones[number]);
+                             ONES[temp_number]);
     }
 
-    if (group_i != group_total - 1) {
-      char *format = " %s";
+    size_t scale_index = group_total - 1 - group_i;
+    if (number > 0 && scale_index > 0) {
+      char *format = " %s, ";
       output_len += snprintf(output + output_len,
                              output_size - output_len,
                              format,
-                             groups[group_total - 1 - group_i]);
+                             SCALES[scale_index]);
     }
   }
 
+  if (output_len >= 2 &&               //
+      output[output_len - 2] == ',' && //
+      output[output_len - 1] == ' '    //
+  ) {
+    output[output_len - 2] = '\0';
+    output[output_len - 1] = '\0';
+  }
+
   if (leading_zeros_group_count == group_total) {
-    snprintf(output, output_size, "%s", ones[0]);
+    snprintf(output, output_size, "%s", ONES[0]);
   }
 }
 
 int main(void) {
-  struct testcase_t testcases[] = {
+  struct testcase testcases[] = {
     {
       .input = "0",
       .expected = "zero",
@@ -287,19 +293,17 @@ int main(void) {
   };
 
   size_t passed = 0;
-  size_t total = sizeof(testcases) / sizeof(struct testcase_t);
+  size_t total = sizeof(testcases) / sizeof(struct testcase);
 
-  total = 0;
-  for (size_t i = 0; i < 20; i++) {
-    total++;
-    // for (size_t i = 0; i < total; i++) {
-    struct testcase_t testcase = testcases[i];
-    char *input = testcase.input;
-    char *expected = testcase.expected;
+  for (size_t i = 0; i < total; i++) {
+    struct testcase tc = testcases[i];
+    char *input = tc.input;
+    size_t input_len = strlen(input);
     char output[1000] = {0};
     size_t output_size = sizeof(output);
+    char *expected = tc.expected;
 
-    number_wordinator(output, output_size, input);
+    number_wordinator(output, output_size, input, input_len);
 
     if (strcmp(output, expected) == 0) {
       passed++;
