@@ -34,20 +34,17 @@ void number_wordinator(char output[],
                        size_t output_size,
                        char input_digits[],
                        size_t input_len) {
-  bool has_leading_zeros = true;
-  size_t leading_zeros_group_count = 0;
   size_t group_total = (input_len + MAX_GROUP_SIZE - 1) / MAX_GROUP_SIZE;
   size_t output_len = 0;
 
   for (size_t group_i = 0; group_i < group_total; group_i++) {
     char group[3] = {'0', '0', '0'};
-    int input_offset_i = group_i * MAX_GROUP_SIZE;
 
+    int input_offset_i = group_i * MAX_GROUP_SIZE;
     if (input_len % MAX_GROUP_SIZE != 0) {
       int missing = MAX_GROUP_SIZE - (input_len % MAX_GROUP_SIZE);
       input_offset_i -= missing;
     }
-
     for (size_t i = 0; i < MAX_GROUP_SIZE; i++) {
       int digit_i = input_offset_i + i;
       if (digit_i >= 0 && digit_i < (int)input_len) {
@@ -59,11 +56,7 @@ void number_wordinator(char output[],
                  (group[1] - '0') * 10 +  //
                  (group[2] - '0');
 
-    if (number != 0) {
-      has_leading_zeros = false;
-    }
-    if (has_leading_zeros) {
-      leading_zeros_group_count++;
+    if (number == 0) {
       continue;
     }
 
@@ -110,7 +103,7 @@ void number_wordinator(char output[],
     output[output_len - 1] = '\0';
   }
 
-  if (leading_zeros_group_count == group_total) {
+  if (output_len == 0) {
     snprintf(output, output_size, "%s", ONES[0]);
   }
 }
