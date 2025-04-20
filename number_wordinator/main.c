@@ -18,7 +18,7 @@ char *TENS[] = {
 
 char *SCALES[] = {
   // clang-format off
-  "",         "thousand",    "million", "billion",
+  "",         "thousand",    "million",     "billion",
   "trillion", "quadrillion", "quintillion",
   // clang-format on
 };

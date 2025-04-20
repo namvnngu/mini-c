@@ -32,7 +32,7 @@ static void welcome__draw(struct welcome *wc) {
             welcome__TITLE);
 
   int desc_len =
-      (sizeof(welcome__DESCRIPTION) / sizeof(welcome__DESCRIPTION[0]));
+    (sizeof(welcome__DESCRIPTION) / sizeof(welcome__DESCRIPTION[0]));
   for (int i = 0; i < desc_len; i++) {
     mvwprintw(wc->win,
               6 + i,

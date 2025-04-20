@@ -35,7 +35,7 @@ static void playagain__draw(struct playagain *pa, int score) {
             score);
 
   int desc_len =
-      (sizeof(playagain__DESCRIPTION) / sizeof(playagain__DESCRIPTION[0]));
+    (sizeof(playagain__DESCRIPTION) / sizeof(playagain__DESCRIPTION[0]));
   for (int i = 0; i < desc_len; i++) {
     mvwprintw(pa->win,
               6 + i,

@@ -21,7 +21,7 @@ struct help *help_new(struct map *m, struct scoreboard *sb) {
   h->height = 9;
   h->startx = m->startx - h->width - 2; // 2 is gap between help and map
   h->starty =
-      m->starty + sb->height + 1; // 1 is gap between help and scoreboard
+    m->starty + sb->height + 1; // 1 is gap between help and scoreboard
   h->win = newwin(h->height, h->width, h->starty, h->startx);
 
   return h;

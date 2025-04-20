@@ -26,7 +26,7 @@ struct map *map_new(void) {
   m->startx = (COLS - m->width * TERMINAL_WIDTH_UNIT) / 2;
   m->starty = (LINES - m->height) / 2;
   m->win =
-      newwin(m->height, m->width * TERMINAL_WIDTH_UNIT, m->starty, m->startx);
+    newwin(m->height, m->width * TERMINAL_WIDTH_UNIT, m->starty, m->startx);
   m->border_size = 1;
   m->draw_point = map__draw_point;
 
