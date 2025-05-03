@@ -7,6 +7,6 @@ $(TOPTARGETS): $(PROJECTS)
 $(PROJECTS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
-.PHONY: format
-format:
-	clang-format -i -- ./**/*.c ./**/*.h
+.PHONY: fmt
+fmt:
+	clang-format -i ./**/*.[ch]

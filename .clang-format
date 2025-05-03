@@ -1,49 +1,70 @@
 ---
-Language: C
-AlignArrayOfStructures: None
-AlignConsecutiveMacros:
-  Enabled: true
-AlignConsecutiveShortCaseStatements:
-  Enabled: true
-AllowAllArgumentsOnNextLine: false
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Left
+AlignOperands: true
+AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortCaseLabelsOnASingleLine: true
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: AllIfsAndElse
-BinPackArguments: false
-BinPackParameters: false
-BracedInitializerIndentWidth: 2
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+BinPackArguments: true
+BinPackParameters: true
+BreakAfterReturnType: Automatic
+BreakBeforeBinaryOperators: None
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: true
 ColumnLimit: 80
 ContinuationIndentWidth: 2
-ExperimentalAutoDetectBinPacking: true
+Cpp11BracedListStyle: false
+DerivePointerAlignment: false
+DisableFormat: false
+ExperimentalAutoDetectBinPacking: false
+IncludeBlocks: Preserve
+IncludeCategories:
+  - Regex: '.*'
+    Priority: 1
 IndentCaseLabels: true
+IndentGotoLabels: true
+IndentPPDirectives: None
 IndentWidth: 2
-PenaltyReturnTypeOnItsOwnLine: 100
-SpaceInEmptyBlock: false
-SpacesInContainerLiterals: true
-UseTab: Never
----
-Language: Cpp
-AlignArrayOfStructures: None
-AlignConsecutiveMacros:
-  Enabled: true
-AlignConsecutiveShortCaseStatements:
-  Enabled: true
-AllowAllArgumentsOnNextLine: false
-AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortCaseLabelsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: AllIfsAndElse
-BinPackArguments: false
-BinPackParameters: false
-BracedInitializerIndentWidth: 2
-ColumnLimit: 80
-ContinuationIndentWidth: 2
-ExperimentalAutoDetectBinPacking: true
-IndentCaseLabels: true
-IndentWidth: 2
-PenaltyReturnTypeOnItsOwnLine: 100
-SpaceInEmptyBlock: false
-SpacesInContainerLiterals: true
+IndentWrappedFunctionNames: false
+KeepEmptyLines:
+  AtEndOfFile: false
+  AtStartOfBlock: false
+  AtStartOfFile: false
+MacroBlockBegin: ''
+MacroBlockEnd: ''
+MaxEmptyLinesToKeep: 1
+PenaltyBreakAssignment: 30
+PenaltyBreakBeforeFirstCallParameter: 10
+PenaltyBreakComment: 10
+PenaltyBreakFirstLessLess: 0
+PenaltyBreakString: 10
+PenaltyExcessCharacter: 100
+PenaltyReturnTypeOnItsOwnLine: 60
+PointerAlignment: Right
+ReflowComments: false
+SortIncludes: false
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatementsExceptForEachMacros
+SpaceBeforeRangeBasedForLoopColon: true
+SpacesBeforeTrailingComments: 1
+SpacesInContainerLiterals: false
+SpacesInParensOptions:
+  ExceptDoubleParentheses: false
+  InConditionalStatements: false
+  InCStyleCasts: false
+  InEmptyParentheses: false
+  Other: false
+SpacesInSquareBrackets: false
+TabWidth: 4
 UseTab: Never
 ...
