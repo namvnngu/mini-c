@@ -5,18 +5,21 @@ LDFLAGS   :=
 LDLIBS    := -lcurses
 
 BIN  := main
-SRC  := $(wildcard *.c)
-OBJ  := $(SRC:.c=.o)
+SRCS := $(wildcard *.c)
+DEPS := $(SRCS:.c=.d)
+OBJS := $(SRCS:.c=.o)
 
 DEV := 0
 
 ifeq ($(DEV), 1)
-	CFLAGS += -O0 -g
+	CFLAGS += -O0 -g -MMD
 else
 	CFLAGS += -O3
 endif
 
-$(BIN): $(OBJ)
+$(BIN): $(OBJS)
+
+-include $(DEPS)
 
 .PHONY: run
 run: $(BIN)
@@ -24,4 +27,4 @@ run: $(BIN)
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJ) $(BIN)
+	rm -rf $(OBJS) $(DEPS) $(BIN)
