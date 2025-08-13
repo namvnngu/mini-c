@@ -1,8 +1,8 @@
-CC        := cc
-CPPFLAGS  :=
-CFLAGS    := -std=c99 -Wall -Werror -Wextra
-LDFLAGS   :=
-LDLIBS    :=
+CC       := cc
+CPPFLAGS :=
+CFLAGS   := -std=c99 -Wall -Werror -Wextra
+LDFLAGS  :=
+LDLIBS   :=
 
 BIN  := main
 SRCS := $(wildcard *.c)
