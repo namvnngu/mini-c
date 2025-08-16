@@ -4,10 +4,10 @@ CFLAGS   := -std=c99 -Wall -Werror -Wextra
 LDFLAGS  :=
 LDLIBS   := -lcurses
 
-BIN  := main
-SRCS := $(wildcard *.c)
-DEPS := $(SRCS:.c=.d)
-OBJS := $(SRCS:.c=.o)
+BIN := main
+SRC := $(wildcard *.c)
+OBJ := $(SRC:.c=.o)
+DEP := $(SRC:.c=.d)
 
 DEV := 0
 
@@ -17,9 +17,9 @@ else
 	CFLAGS += -O3
 endif
 
-$(BIN): $(OBJS)
+$(BIN): $(OBJ)
 
--include $(DEPS)
+-include $(DEP)
 
 .PHONY: run
 run: $(BIN)
@@ -27,4 +27,4 @@ run: $(BIN)
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJS) $(DEPS) $(BIN)
+	rm -rf $(OBJ) $(DEP) $(BIN)
