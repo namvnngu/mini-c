@@ -13,4 +13,4 @@ learning purposes:
 8. [Number Wordinator](./number_wordinator)
 9. [Tetris NCURSES](./tetris_ncurses)
 
-The repository is under [UNLICENSE](https://unlicense.org).
+The repository is under [MIT License](./LICENSE).
